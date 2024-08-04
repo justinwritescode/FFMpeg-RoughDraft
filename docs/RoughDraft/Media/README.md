@@ -22,6 +22,8 @@
 * [set_Copyright](set_Copyright.md)
 * [get_CreationTime](get_CreationTime.md)
 * [set_CreationTime](set_CreationTime.md)
+* [get_Date](get_Date.md)
+* [set_Date](set_Date.md)
 * [get_Description](get_Description.md)
 * [set_Description](set_Description.md)
 * [get_Disc](get_Disc.md)
