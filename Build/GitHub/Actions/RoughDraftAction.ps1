@@ -43,30 +43,52 @@ $UserName
 [PSCustomObject]$PSBoundParameters | Format-List | Out-Host
 "::endgroup::" | Out-Host
 
-if ($env:GITHUB_ACTION_PATH) {
-    $RoughDraftModulePath = Join-Path $env:GITHUB_ACTION_PATH 'RoughDraft.psd1'
-    if (Test-path $RoughDraftModulePath) {
-        Import-Module $RoughDraftModulePath -Force -PassThru | Out-String
-    } else {
-        throw "RoughDraft not found"
+function ImportActionModule {
+    $moduleName = 'RoughDraft'
+
+    if ($env:GITHUB_ACTION_PATH) {
+        $LocalModulePath = Join-Path $env:GITHUB_ACTION_PATH "$moduleName.psd1"
+        if (Test-path $LocalModulePath) {
+            Import-Module $LocalModulePath -Force -PassThru | Out-String
+        } else {
+            throw "Module '$moduleName' not found"
+        }
+    } elseif (-not (Get-Module $moduleName)) {    
+        throw "Module '$ModuleName' not found"
     }
-} elseif (-not (Get-Module RoughDraft)) {    
-    throw "Action Path not found"
+
+    "::notice title=ModuleLoaded::$ModuleName Loaded from Path - $($LocalModulePath)" | Out-Host
+    if ($env:GITHUB_STEP_SUMMARY) {
+        "# $($moduleName)" |
+            Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+    }
+}
+function InitializeAction {
+    #region Custom 
+    if ($PSVersionTable.Platform -eq 'Unix') {
+        $ffMpegInPath =  $ExecutionContext.SessionState.InvokeCommand.GetCommand('ffmpeg', 'Application')
+        if (-not $ffMpegInPath -and $env:GITHUB_WORKFLOW) {
+            "::group::Installing FFMpeg" | Out-Host
+            sudo apt update | Out-Host
+            sudo apt install ffmpeg @FFMpegInstallArgument | Out-Host
+            "::endgroup::" | Out-Host
+        }
+    }
+    #endregion Custom
 }
 
-if ($PSVersionTable.Platform -eq 'Unix') {
-    $ffMpegInPath =  $ExecutionContext.SessionState.InvokeCommand.GetCommand('ffmpeg', 'Application')
-    if (-not $ffMpegInPath -and $env:GITHUB_WORKFLOW) {
-        "::group::Installing FFMpeg" | Out-Host
-        sudo apt update | Out-Host
-        sudo apt install ffmpeg @FFMpegInstallArgument | Out-Host
-        "::endgroup::" | Out-Host
-    }
-}
 $anyFilesChanged = $false
-$processScriptOutput = { process { 
+
+filter ProcessOutput {
     $out = $_
-    $outItem = Get-Item -Path $out -ErrorAction SilentlyContinue
+    $outItem = Get-Item -Path $out -ErrorAction Ignore
+    if (-not $outItem -and $out -is [string]) {
+        $out | Out-Host
+        if ($env:GITHUB_STEP_SUMMARY) {
+            "> $out" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+        }
+        return
+    }
     $fullName, $shouldCommit = 
         if ($out -is [IO.FileInfo]) {
             $out.FullName, (git status $out.Fullname -s)
@@ -83,12 +105,14 @@ $processScriptOutput = { process {
         $anyFilesChanged = $true
     }
     $out
-} }
+}
 
-"::notice title=ModuleLoaded::RoughDraft Loaded from Path - $($RoughDraftModulePath)" | Out-Host
+. ImportActionModule
+. InitializeAction
+
 
 if (-not $UserName) { $UserName = $env:GITHUB_ACTOR }
-if (-not $UserEmail) { $UserEmail = "$UserName@github.com" }
+if (-not $UserEmail) { $UserEmail = "$env:GITHUB_ACTOR_ID+$UserName@noreply.github.com" }
 git config --global user.email $UserEmail
 git config --global user.name  $UserName
 
@@ -99,7 +123,7 @@ git pull | Out-Host
 $roughDraftScriptStart = [DateTime]::Now
 if ($RoughDraftScript) {
     Invoke-Expression -Command $RoughDraftScript |
-        . $processScriptOutput |
+        . ProcessOutput |
         Out-Host
 }
 $roughDraftScriptTook = [Datetime]::Now - $roughDraftScriptStart
@@ -114,7 +138,7 @@ if (-not $SkipRoughDraftPS1) {
             if ($env:GITHUB_STEP_SUMMARY) {
                 "## RoughDraft Scripts" |
                     Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-            }
+            } 
         } -Process {
             $roughDraftPS1List += $_.FullName.Replace($env:GITHUB_WORKSPACE, '').TrimStart('/')
             $roughDraftPS1Count++
@@ -125,11 +149,12 @@ if (-not $SkipRoughDraftPS1) {
             }            
             $scriptFileOutputs = . $scriptFile.FullName
             if ($env:GITHUB_STEP_SUMMARY) {
-                $scriptFileOutputs |
+                "$(@($scriptFileOutputs).Length) Outputs" |                    
                     Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                "$(@($scriptFileOutputs).Length) Outputs" | Out-Host
             }
             $scriptFileOutputs |
-                . $processScriptOutput  | 
+                . ProcessOutput  | 
                 Out-Host
         }
 }
