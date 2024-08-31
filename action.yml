@@ -174,27 +174,42 @@ runs:
                 Out-Host
         }
         $roughDraftScriptTook = [Datetime]::Now - $roughDraftScriptStart
-        
         $roughDraftPS1Start = [DateTime]::Now
+        
         $roughDraftPS1List  = @()
         if (-not $SkipRoughDraftPS1) {
             Get-ChildItem -Recurse -Path $env:GITHUB_WORKSPACE |
                 Where-Object Name -Match '\.RoughDraft\.ps1$' |
                 
-                ForEach-Object {
+                ForEach-Object -Begin {
+                    if ($env:GITHUB_STEP_SUMMARY) {
+                        "## RoughDraft Scripts" |
+                            Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                    }
+                } -Process {
                     $roughDraftPS1List += $_.FullName.Replace($env:GITHUB_WORKSPACE, '').TrimStart('/')
                     $roughDraftPS1Count++
-                    "::notice title=Running::$($_.Fullname)" | Out-Host
-                    . $_.FullName |            
+                    $scriptFile = $_
+                    if ($env:GITHUB_STEP_SUMMARY) {
+                        "### $($scriptFile.Fullname)" |
+                            Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                    }            
+                    $scriptFileOutputs = . $scriptFile.FullName
+                    if ($env:GITHUB_STEP_SUMMARY) {
+                        $scriptFileOutputs |
+                            Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                    }
+                    $scriptFileOutputs |
                         . $processScriptOutput  | 
                         Out-Host
                 }
         }
         $roughDraftPS1EndStart = [DateTime]::Now
         $roughDraftPS1Took = [Datetime]::Now - $roughDraftPS1Start
+        
         if ($CommitMessage -or $anyFilesChanged) {
             if ($CommitMessage) {
-                dir $env:GITHUB_WORKSPACE -Recurse |
+                Get-ChildItem $env:GITHUB_WORKSPACE -Recurse |
                     ForEach-Object {
                         $gitStatusOutput = git status $_.Fullname -s
                         if ($gitStatusOutput) {
