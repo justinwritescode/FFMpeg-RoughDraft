@@ -39,8 +39,6 @@ $UserEmail,
 $UserName
 )
 
-
-
 "::group::Parameters" | Out-Host
 [PSCustomObject]$PSBoundParameters | Format-List | Out-Host
 "::endgroup::" | Out-Host
@@ -105,7 +103,6 @@ if ($RoughDraftScript) {
         Out-Host
 }
 $roughDraftScriptTook = [Datetime]::Now - $roughDraftScriptStart
-"::set-output name=RoughDraftScriptRuntime::$($roughDraftScriptTook.TotalMilliseconds)"   | Out-Host
 
 $roughDraftPS1Start = [DateTime]::Now
 $roughDraftPS1List  = @()
@@ -124,9 +121,6 @@ if (-not $SkipRoughDraftPS1) {
 }
 $roughDraftPS1EndStart = [DateTime]::Now
 $roughDraftPS1Took = [Datetime]::Now - $roughDraftPS1Start
-"::set-output name=RoughDraftPS1Count::$($roughDraftPS1List.Length)"   | Out-Host
-"::set-output name=RoughDraftPS1Files::$($roughDraftPS1List -join ';')"   | Out-Host
-"::set-output name=RoughDraftPS1Runtime::$($roughDraftPS1Took.TotalMilliseconds)"   | Out-Host
 if ($CommitMessage -or $anyFilesChanged) {
     if ($CommitMessage) {
         dir $env:GITHUB_WORKSPACE -Recurse |
@@ -139,9 +133,6 @@ if ($CommitMessage -or $anyFilesChanged) {
 
         git commit -m $ExecutionContext.SessionState.InvokeCommand.ExpandString($CommitMessage)
     }
-
-    
-    
 
     $checkDetached = git symbolic-ref -q HEAD
     if (-not $LASTEXITCODE) {

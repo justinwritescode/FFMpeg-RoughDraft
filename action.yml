@@ -47,12 +47,12 @@ runs:
       id: RoughDraftAction
       shell: pwsh
       env: 
-        UserName: ${{inputs.UserName}}
         FFMpegInstallArgument: ${{inputs.FFMpegInstallArgument}}
-        SkipRoughDraftPS1: ${{inputs.SkipRoughDraftPS1}}
-        UserEmail: ${{inputs.UserEmail}}
         CommitMessage: ${{inputs.CommitMessage}}
         RoughDraftScript: ${{inputs.RoughDraftScript}}
+        UserName: ${{inputs.UserName}}
+        UserEmail: ${{inputs.UserEmail}}
+        SkipRoughDraftPS1: ${{inputs.SkipRoughDraftPS1}}
       run: |
         $Parameters = @{}
         $Parameters.RoughDraftScript = ${env:RoughDraftScript}
@@ -109,8 +109,6 @@ runs:
         [string]
         $UserName
         )
-        
-        
         
         "::group::Parameters" | Out-Host
         [PSCustomObject]$PSBoundParameters | Format-List | Out-Host
@@ -176,7 +174,6 @@ runs:
                 Out-Host
         }
         $roughDraftScriptTook = [Datetime]::Now - $roughDraftScriptStart
-        "::set-output name=RoughDraftScriptRuntime::$($roughDraftScriptTook.TotalMilliseconds)"   | Out-Host
         
         $roughDraftPS1Start = [DateTime]::Now
         $roughDraftPS1List  = @()
@@ -195,9 +192,6 @@ runs:
         }
         $roughDraftPS1EndStart = [DateTime]::Now
         $roughDraftPS1Took = [Datetime]::Now - $roughDraftPS1Start
-        "::set-output name=RoughDraftPS1Count::$($roughDraftPS1List.Length)"   | Out-Host
-        "::set-output name=RoughDraftPS1Files::$($roughDraftPS1List -join ';')"   | Out-Host
-        "::set-output name=RoughDraftPS1Runtime::$($roughDraftPS1Took.TotalMilliseconds)"   | Out-Host
         if ($CommitMessage -or $anyFilesChanged) {
             if ($CommitMessage) {
                 dir $env:GITHUB_WORKSPACE -Recurse |
@@ -210,9 +204,6 @@ runs:
         
                 git commit -m $ExecutionContext.SessionState.InvokeCommand.ExpandString($CommitMessage)
             }
-        
-            
-            
         
             $checkDetached = git symbolic-ref -q HEAD
             if (-not $LASTEXITCODE) {
