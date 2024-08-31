@@ -75,6 +75,62 @@ function InitializeAction {
         }
     }
     #endregion Custom
+
+    if (-not $UserName) { $UserName = $env:GITHUB_ACTOR }
+    if (-not $UserEmail) { $UserEmail = "$env:GITHUB_ACTOR_ID+$UserName@noreply.github.com" }
+    git config --global user.email $UserEmail
+    git config --global user.name  $UserName
+}
+
+function RunModuleScripts {
+    $myScriptStart = [DateTime]::Now
+    $myScript = $ExecutionContext.SessionState.PSVariable.Get("${ModuleName}Script").Value
+    if ($myScript) {
+        Invoke-Expression -Command $myScript |
+            . ProcessOutput |
+            Out-Host
+    }
+    $myScriptTook = [Datetime]::Now - $myScriptStart
+    $MyScriptFilesStart = [DateTime]::Now
+
+    $myScriptList  = @()
+    $shouldSkip = $ExecutionContext.SessionState.PSVariable.Get("Skip${ModuleName}PS1").Value
+    if (-not $shouldSkip) {
+        Get-ChildItem -Recurse -Path $env:GITHUB_WORKSPACE |
+            Where-Object Name -Match "\.$($moduleName)\.ps1$" |            
+            ForEach-Object -Begin {
+                if ($env:GITHUB_STEP_SUMMARY) {
+                    "## $ModuleName Scripts" |
+                        Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                } 
+            } -Process {
+                $myScriptList += $_.FullName.Replace($env:GITHUB_WORKSPACE, '').TrimStart('/')
+                $myScriptCount++
+                $scriptFile = $_
+                if ($env:GITHUB_STEP_SUMMARY) {
+                    "### $($scriptFile.Fullname)" |
+                        Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                }            
+                $scriptFileOutputs = . $scriptFile.FullName
+                if ($env:GITHUB_STEP_SUMMARY) {
+                    "$(@($scriptFileOutputs).Length) Outputs" |                    
+                        Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                    "$(@($scriptFileOutputs).Length) Outputs" | Out-Host
+                }
+                $scriptFileOutputs |
+                    . ProcessOutput  | 
+                    Out-Host
+            }
+    }
+    
+    $MyScriptFilesTook = [Datetime]::Now - $MyScriptFilesStart
+    $SummaryOfMyScripts = "$myScriptCount $moduleName scripts took $($MyScriptFilesTook.TotalSeconds) seconds" 
+    $SummaryOfMyScripts | 
+        Out-Host
+    if ($env:GITHUB_STEP_SUMMARY) {
+        $SummaryOfMyScripts | 
+            Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+    }
 }
 
 $anyFilesChanged = $false
@@ -103,63 +159,19 @@ filter ProcessOutput {
             git commit -m "$($out.CommitMessage)"
         }
         $anyFilesChanged = $true
-    }
+    }    
     $out
 }
+
+if (-not $env:GITHUB_WORKSPACE) { throw "No GitHub workspace" }
 
 . ImportActionModule
 . InitializeAction
 
 
-if (-not $UserName) { $UserName = $env:GITHUB_ACTOR }
-if (-not $UserEmail) { $UserEmail = "$env:GITHUB_ACTOR_ID+$UserName@noreply.github.com" }
-git config --global user.email $UserEmail
-git config --global user.name  $UserName
-
-if (-not $env:GITHUB_WORKSPACE) { throw "No GitHub workspace" }
-
 git pull | Out-Host
 
-$roughDraftScriptStart = [DateTime]::Now
-if ($RoughDraftScript) {
-    Invoke-Expression -Command $RoughDraftScript |
-        . ProcessOutput |
-        Out-Host
-}
-$roughDraftScriptTook = [Datetime]::Now - $roughDraftScriptStart
-$roughDraftPS1Start = [DateTime]::Now
-
-$roughDraftPS1List  = @()
-if (-not $SkipRoughDraftPS1) {
-    Get-ChildItem -Recurse -Path $env:GITHUB_WORKSPACE |
-        Where-Object Name -Match '\.RoughDraft\.ps1$' |
-        
-        ForEach-Object -Begin {
-            if ($env:GITHUB_STEP_SUMMARY) {
-                "## RoughDraft Scripts" |
-                    Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-            } 
-        } -Process {
-            $roughDraftPS1List += $_.FullName.Replace($env:GITHUB_WORKSPACE, '').TrimStart('/')
-            $roughDraftPS1Count++
-            $scriptFile = $_
-            if ($env:GITHUB_STEP_SUMMARY) {
-                "### $($scriptFile.Fullname)" |
-                    Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-            }            
-            $scriptFileOutputs = . $scriptFile.FullName
-            if ($env:GITHUB_STEP_SUMMARY) {
-                "$(@($scriptFileOutputs).Length) Outputs" |                    
-                    Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
-                "$(@($scriptFileOutputs).Length) Outputs" | Out-Host
-            }
-            $scriptFileOutputs |
-                . ProcessOutput  | 
-                Out-Host
-        }
-}
-$roughDraftPS1EndStart = [DateTime]::Now
-$roughDraftPS1Took = [Datetime]::Now - $roughDraftPS1Start
+. RunModuleScripts
 
 if ($CommitMessage -or $anyFilesChanged) {
     if ($CommitMessage) {
