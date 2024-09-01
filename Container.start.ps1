@@ -28,19 +28,22 @@ using namespace 'ghcr.io/startautomating/roughdraft'
 
 param()
 
-$HostMountDirectory = 
-    if (Test-Path '/proc/mounts') {
+$env:IN_CONTAINER = $true
+
+$global:ContainerInfo = [Ordered]@{
+    MountedPaths = if (Test-Path '/proc/mounts') {
         @(
             (Select-String "\S+\s(?<p>\S+).+rw?,.+symlinkroot=/mnt/host" "/proc/mounts").Matches.Groups |
                 Where-Object Name -eq p |
                 Get-Item -path { $_.Value }
         )
-    } else {
-        @()
     }
-if ($HostMountDirectory) {
-    "Mounted Directories:" | Out-Host
-    $HostMountDirectory | Out-Host
+}
+$global:ContainerInfo.MountedFiles = $global:ContainerInfo.MountedPaths | Get-ChildItem -File -Recurse
+   
+if ($global:ContainerInfo.MountedPaths) {
+    "Mounted $($global:ContainerInfo.MountedFiles.Length) files from $($global:ContainerInfo.MountedPaths.Length) paths:" | Out-Host
+    $global:ContainerInfo.MountedPaths | Out-Host
 }
 
 if ($args) {
@@ -50,7 +53,7 @@ if ($args) {
     # If there are no arguments, see if there is a Microservice.ps1
     if (Test-Path './Microservice.ps1') {
         # If there is a Microservice.ps1, run it.
-        & ./Microservice.ps1
+        . ./Microservice.ps1
     }
 }
 
