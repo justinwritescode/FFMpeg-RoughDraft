@@ -39,13 +39,15 @@ $UserEmail,
 $UserName
 )
 
+if (-not $env:GITHUB_WORKSPACE) { throw "No GitHub workspace" }
+$anyFilesChanged = $false
+$moduleName = 'RoughDraft'
+
 "::group::Parameters" | Out-Host
 [PSCustomObject]$PSBoundParameters | Format-List | Out-Host
 "::endgroup::" | Out-Host
 
 function ImportActionModule {
-    $moduleName = 'RoughDraft'
-
     if ($env:GITHUB_ACTION_PATH) {
         $LocalModulePath = Join-Path $env:GITHUB_ACTION_PATH "$moduleName.psd1"
         if (Test-path $LocalModulePath) {
@@ -76,13 +78,19 @@ function InitializeAction {
     }
     #endregion Custom
 
+    # Configure git based on the $env:GITHUB_ACTOR
     if (-not $UserName) { $UserName = $env:GITHUB_ACTOR }
-    if (-not $UserEmail) { $UserEmail = "$env:GITHUB_ACTOR_ID+$UserName@noreply.github.com" }
+    if (-not $actorID)  { $actorID = $env:GITHUB_ACTOR_ID }
+    $actorInfo = Invoke-RestMethod -Uri "https://api.github.com/user/$actorID"
+    if (-not $UserEmail) { $UserEmail = "$UserName@noreply.github.com" }
     git config --global user.email $UserEmail
-    git config --global user.name  $UserName
+    git config --global user.name  $actorIdInfo.name
+
+    # Pull down any changes
+    git pull | Out-Host
 }
 
-function RunModuleScripts {
+function InvokeActionModule {
     $myScriptStart = [DateTime]::Now
     $myScript = $ExecutionContext.SessionState.PSVariable.Get("${ModuleName}Script").Value
     if ($myScript) {
@@ -133,7 +141,32 @@ function RunModuleScripts {
     }
 }
 
-$anyFilesChanged = $false
+function PushActionOutput {
+    if ($CommitMessage -or $anyFilesChanged) {
+        if ($CommitMessage) {
+            Get-ChildItem $env:GITHUB_WORKSPACE -Recurse |
+                ForEach-Object {
+                    $gitStatusOutput = git status $_.Fullname -s
+                    if ($gitStatusOutput) {
+                        git add $_.Fullname
+                    }
+                }
+    
+            git commit -m $ExecutionContext.SessionState.InvokeCommand.ExpandString($CommitMessage)
+        }
+    
+        $checkDetached = git symbolic-ref -q HEAD
+        if (-not $LASTEXITCODE) {
+            "::notice::Pushing Changes" | Out-Host
+            git push
+            "Git Push Output: $($gitPushed  | Out-String)"
+        } else {
+            "::notice::Not pushing changes (on detached head)" | Out-Host
+            $LASTEXITCODE = 0
+            exit 0
+        }
+    }
+}
 
 filter ProcessOutput {
     $out = $_
@@ -154,46 +187,19 @@ filter ProcessOutput {
     if ($shouldCommit) {
         git add $fullName
         if ($out.Message) {
-            git commit -m "$($out.Message)"
+            git commit -m "$($out.Message)" | Out-Host
         } elseif ($out.CommitMessage) {
-            git commit -m "$($out.CommitMessage)"
+            git commit -m "$($out.CommitMessage)" | Out-Host
+        }  elseif ($gitHubEvent.head_commit.message) {
+            git commit -m "$($gitHubEvent.head_commit.message)" | Out-Host
         }
         $anyFilesChanged = $true
     }    
     $out
 }
 
-if (-not $env:GITHUB_WORKSPACE) { throw "No GitHub workspace" }
 
 . ImportActionModule
 . InitializeAction
-
-
-git pull | Out-Host
-
-. RunModuleScripts
-
-if ($CommitMessage -or $anyFilesChanged) {
-    if ($CommitMessage) {
-        Get-ChildItem $env:GITHUB_WORKSPACE -Recurse |
-            ForEach-Object {
-                $gitStatusOutput = git status $_.Fullname -s
-                if ($gitStatusOutput) {
-                    git add $_.Fullname
-                }
-            }
-
-        git commit -m $ExecutionContext.SessionState.InvokeCommand.ExpandString($CommitMessage)
-    }
-
-    $checkDetached = git symbolic-ref -q HEAD
-    if (-not $LASTEXITCODE) {
-        "::notice::Pushing Changes" | Out-Host
-        git push
-        "Git Push Output: $($gitPushed  | Out-String)"
-    } else {
-        "::notice::Not pushing changes (on detached head)" | Out-Host
-        $LASTEXITCODE = 0
-        exit 0
-    }
-}
+. InvokeActionModule
+. PushActionOutput
