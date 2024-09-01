@@ -28,6 +28,21 @@ using namespace 'ghcr.io/startautomating/roughdraft'
 
 param()
 
+$HostMountDirectory = 
+    if (Test-Path '/proc/mounts') {
+        @(
+            (Select-String "\S+\s(?<p>\S+).+rw?,.+symlinkroot=/mnt/host" "/proc/mounts").Matches.Groups |
+                Where-Object Name -eq p |
+                Get-Item -path { $_.Value }
+        )
+    } else {
+        @()
+    }
+if ($HostMountDirectory) {
+    "Mounted Directories:" | Out-Host
+    $HostMountDirectory | Out-Host
+}
+
 if ($args) {
     # If there are arguments, output them (you could handle them in a more complex way).
     "$args" | Out-Host    
