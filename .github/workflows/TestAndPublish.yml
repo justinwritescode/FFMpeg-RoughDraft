@@ -583,14 +583,10 @@ jobs:
         if: ${{github.ref_name == 'main'}}
         uses: StartAutomating/RoughDraft@main
         id: RoughDraftMain
-        with: 
-          CommitMessage: Running RoughDraft [skip ci]
       - name: Run RoughDraft (on branch)
         if: ${{github.ref_name != 'main'}}
         uses: ./
         id: RoughDraftBranch
-        with: 
-          CommitMessage: Running RoughDraft [skip ci]
       - name: UsePiecemeal
         uses: StartAutomating/Piecemeal@main
       - name: BuildPipeScript

@@ -22,6 +22,10 @@ $RoughDraftScript,
 [switch]
 $SkipRoughDraftPS1,
 
+# A list of modules to be installed from the PowerShell gallery before scripts run.
+[string[]]
+$InstallModule = @("ugit"),
+
 # A list of installation arguments.
 [string[]]
 $FFMpegInstallArgument,
@@ -42,12 +46,31 @@ $UserName
 if (-not $env:GITHUB_WORKSPACE) { throw "No GitHub workspace" }
 $anyFilesChanged = $false
 $moduleName = 'RoughDraft'
+$actorInfo = $null
 
 "::group::Parameters" | Out-Host
 [PSCustomObject]$PSBoundParameters | Format-List | Out-Host
 "::endgroup::" | Out-Host
 
 function ImportActionModule {
+    #region -InstallModule
+    if ($InstallModule) {
+        "::group::Installing Modules" | Out-Host
+        foreach ($moduleToInstall in $InstallModule) {
+            $moduleInWorkspace = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -File |
+                Where-Object Name -eq "$($moduleToInstall).psd1" |
+                Where-Object { 
+                    $(Get-Content $_.FullName -Raw) -match 'ModuleVersion'
+                }
+            if (-not $moduleInWorkspace) {
+                Install-Module $moduleToInstall -Scope CurrentUser -Force
+                Import-Module $moduleToInstall -Force -PassThru | Out-Host
+            }
+        }
+        "::endgroup::" | Out-Host
+    }
+    #endregion -InstallModule
+
     if ($env:GITHUB_ACTION_PATH) {
         $LocalModulePath = Join-Path $env:GITHUB_ACTION_PATH "$moduleName.psd1"
         if (Test-path $LocalModulePath) {
@@ -84,7 +107,7 @@ function InitializeAction {
     $actorInfo = Invoke-RestMethod -Uri "https://api.github.com/user/$actorID"
     if (-not $UserEmail) { $UserEmail = "$UserName@noreply.github.com" }
     git config --global user.email $UserEmail
-    git config --global user.name  $actorIdInfo.name
+    git config --global user.name  $actorInfo.name
 
     # Pull down any changes
     git pull | Out-Host
