@@ -83,11 +83,31 @@ Register-EngineEvent -SourceIdentifier HTTP.Request -Action {
                 "Nothing to Serve"
             }
 
+        if ($outputMessage.ContentType) {
+            # If the output message has a ContentType, set the response content type.
+            $response.ContentType = $outputMessage.ContentType
+        }
+        $headerHashtableKeys = 'Headers', 'Header'
+        foreach ($key in $headerHashtableKeys) {
+            if ($outputMessage.$key -is [Collections.IDictionary]) {
+                # If the output message has a Headers or Header key, set the response headers.
+                foreach ($headerKey in $outputMessage[$key].Keys) {
+                    $response.Headers.Add($headerKey, $outputMessage[$key][$headerKey])
+                }
+            }
+        }
+
         $outputBuffer = 
             if ($outputMessage -is [string]) {
                 # At this point our output message is a string, so we can convert it to bytes.
                 $OutputEncoding.GetBytes($outputMessage)
-            } elseif ($($outputMessageBytes = $outputMessage -as [byte[]]) $outputMessageBytes) {
+            } 
+            elseif ($outputMessage -is [Collections.IDictionary]) {
+                
+            } elseif ($(
+                $outputMessageBytes = $outputMessage -as [byte[]]
+                $outputMessageBytes
+            )) {
                 $outputMessageBytes
             }
         
