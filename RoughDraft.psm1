@@ -40,5 +40,22 @@ if ($partsDirectory) { # If we have parts directory
     }
 }
 #endregion Import Parts
+
+#region Export Myself
+
+# Get my module
+$MyModule = $MyInvocation.MyCommand.ScriptBlock.Module
+# and decorate it with my name (this enables extensibility)
+$MyModule.pstypenames.insert(0,$MyModule.Name)
+# and set a variable with my name that points to me.
+$ExecutionContext.SessionState.PSVariable.Set($MyModule.Name, $myModule)
+#endregion Export Myself
+
+#region Mount Myself
+# Mount myself as a drive
+$newDriveSplat = @{PSProvider='FileSystem';ErrorAction='Ignore';Scope='Global'}
+New-PSDrive -Name $MyModule.Name -Root ($MyModule | Split-Path) @newDriveSplat
+#endregion Mount Myself
+
 Export-ModuleMember -Function *-* -Alias *
 
