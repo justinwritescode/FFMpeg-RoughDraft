@@ -29,21 +29,18 @@ using namespace 'ghcr.io/startautomating/roughdraft'
 param()
 
 $env:IN_CONTAINER = $true
+$PSStyle.OutputRendering = 'Ansi'
 
-$global:ContainerInfo = [Ordered]@{
-    MountedPaths = if (Test-Path '/proc/mounts') {
-        @(
-            (Select-String "\S+\s(?<p>\S+).+rw?,.+symlinkroot=/mnt/host" "/proc/mounts").Matches.Groups |
-                Where-Object Name -eq p |
-                Get-Item -path { $_.Value }
-        )
-    }
-}
-$global:ContainerInfo.MountedFiles = $global:ContainerInfo.MountedPaths | Get-ChildItem -File -Recurse
+$mountedDrives = @(if (Test-Path '/proc/mounts') {
+    (Select-String "\S+\s(?<p>\S+).+rw?,.+symlinkroot=/mnt/host" "/proc/mounts").Matches.Groups |
+        Where-Object Name -eq p |
+        Get-Item -path { $_.Value } | 
+        Mount-RoughDraft
+})
    
 if ($global:ContainerInfo.MountedPaths) {
-    "Mounted $($global:ContainerInfo.MountedFiles.Length) files from $($global:ContainerInfo.MountedPaths.Length) paths:" | Out-Host
-    $global:ContainerInfo.MountedPaths | Out-Host
+    "Mounted $($mountedDrives.Length) drives:" | Out-Host
+    $mountedDrives | Out-Host
 }
 
 if ($args) {
