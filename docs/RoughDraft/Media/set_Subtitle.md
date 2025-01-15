@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Subtitle()
--------------------------------
+set_Subtitle
+------------
 
 ### Synopsis
 Sets the Subtitle Metadata
