@@ -85,7 +85,7 @@ describe ConvertTo-GIF {
 
 describe Edit-Media {
     it 'Can edit media' {
-        $tmpOutPath = ".\colorspectrum$(Get-Random).mp4"
+        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "colorspectrum$(Get-Random).mp4"
         $edited = New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath -Duration "00:00:05" |
             Edit-media -Sepia
 
