@@ -85,8 +85,8 @@ describe ConvertTo-GIF {
 
 describe Edit-Media {
     it 'Can edit media' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "colorspectrum$(Get-Random).mp4"
-        $edited = New-Media -TestSource rgbtestsrc2 -OutputPath $tmpOutPath -Duration "00:00:05" |
+        $tmpOutPath = ".\colorspectrum$(Get-Random).mp4"
+        $edited = New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath -Duration "00:00:05" |
             Edit-media -Sepia
 
         $edited.Name | should -belike *_Sepia*
@@ -129,7 +129,7 @@ describe Join-Media {
         $audioTmpPath = Join-Path ([IO.Path]::GetTempPath()) "Audio$(Get-Random).mp3"
         $avTmpPath    = Join-Path ([IO.Path]::GetTempPath()) "AV$(Get-Random).mp4"
         @(
-            New-Media -TestSource rgbtestsrc2 -Duration "00:00:30" -OutputPath $videoTmpPath
+            New-Media -TestSource rgbtestsrc -Duration "00:00:30" -OutputPath $videoTmpPath
             New-Media -Sine -Duration "00:00:15" -OutputPath $audioTmpPath
         ) | Join-Media -OutputPath $avTmpPath -Shortest |
             Get-Media |
@@ -156,8 +156,8 @@ describe Join-Media {
         )
 
         @(
-            New-Media -TestSource rgbtestsrc2 -Duration "00:00:30" -OutputPath $videoTmpPaths[0]
-            New-Media -TestSource rgbtestsrc2 -Duration "00:00:30" -OutputPath $videoTmpPaths[1]
+            New-Media -TestSource rgbtestsrc -Duration "00:00:30" -OutputPath $videoTmpPaths[0]
+            New-Media -TestSource rgbtestsrc -Duration "00:00:30" -OutputPath $videoTmpPaths[1]
         ) | Join-Media -OutputPath $videoTmpPaths[2] |
             Get-Media |
             Select-Object -ExpandProperty Duration |
@@ -181,7 +181,7 @@ describe Join-Media {
                 Join-Path ([IO.Path]::GetTempPath()) "lapsePart$(Get-Random).jpg"
             }
 
-        $newImages = $tmpOutPaths | New-Media -OutputPath { $_ } -TestSource rgbtestsrc2
+        $newImages = $tmpOutPaths | New-Media -OutputPath { $_ } -TestSource rgbtestsrc
 
         $lapseOutPath = Join-Path ([IO.Path]::GetTempPath()) "lapse$(Get-Random).mp4"
         $lapseFile = $newImages | Join-Media -OutputPath $lapseOutPath -TimeLapse
@@ -245,7 +245,7 @@ describe Set-Media {
     it 'Can set album artwork' {
         $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp3"
         $tmpOutPath2 = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).jpg"
-        New-Media -TestSource rgbtestsrc2 -OutputPath $tmpOutPath2
+        New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath2
         New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
             Set-Media -AlbumArt $tmpOutPath2
 
