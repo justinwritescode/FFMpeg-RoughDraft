@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Network()
-------------------------------
+set_Network
+-----------
 
 ### Synopsis
 Sets the Network Metadata
