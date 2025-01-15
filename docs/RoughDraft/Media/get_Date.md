@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Date()
----------------------------
+get_Date
+--------
 
 ### Synopsis
 Gets Date Metadata
