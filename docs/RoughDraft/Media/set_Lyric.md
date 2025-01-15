@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Lyric()
-----------------------------
+set_Lyric
+---------
 
 ### Synopsis
 Sets the Lyric Metadata
