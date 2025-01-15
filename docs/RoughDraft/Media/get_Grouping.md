@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Grouping()
--------------------------------
+get_Grouping
+------------
 
 ### Synopsis
 Gets Grouping Metadata
