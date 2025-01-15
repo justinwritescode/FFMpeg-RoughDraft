@@ -1,5 +1,5 @@
-RoughDraft.Media.get_FileName()
--------------------------------
+get_FileName
+------------
 
 ### Synopsis
 Gets a media file name
