@@ -107,7 +107,14 @@
                     Write-Progress "Creating $OutputPath" $progressMessage -PercentComplete $perc -Id $progressId  -SecondsRemaining $timeLeft.TotalSeconds
                 }
                 Write-Verbose "$_ "
-            }}
+            }} -ErrorVariable ffmpegError
+
+        if ($ffmpegError) {
+            foreach ($err in $ffmpegError) {
+                $psCmdlet.WriteError($ffmpegError)
+            }
+            return
+        }
 
         Write-Progress "Creating" "$OutputPath " -Completed -Id $progressId
         Get-Item -Path $uro -ErrorAction SilentlyContinue
