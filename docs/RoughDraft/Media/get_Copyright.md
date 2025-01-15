@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Copyright()
---------------------------------
+get_Copyright
+-------------
 
 ### Synopsis
 Gets Copyright Metadata
