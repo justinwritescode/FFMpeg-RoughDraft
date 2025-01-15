@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Mood()
----------------------------
+get_Mood
+--------
 
 ### Synopsis
 Gets Mood Metadata
