@@ -1,5 +1,5 @@
-RoughDraft.Media.get_MediaType()
---------------------------------
+get_MediaType
+-------------
 
 ### Synopsis
 Gets the Media Type
