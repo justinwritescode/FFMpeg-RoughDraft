@@ -1,5 +1,5 @@
-RoughDraft.Media.get_InitialKey()
----------------------------------
+get_InitialKey
+--------------
 
 ### Synopsis
 Gets InitialKey Metadata
