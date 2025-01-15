@@ -93,6 +93,7 @@
                         )
                         # then write the error.
                         $psCmdlet.WriteError($errorRecord)
+                        Write-Warning -Message "Error Encountered while running ffmpeg $($FFMpegArgument -join ' ')"
                     }
                     "$line"
                 }
