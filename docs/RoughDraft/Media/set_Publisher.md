@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Publisher()
---------------------------------
+set_Publisher
+-------------
 
 ### Synopsis
 Sets the Publisher Metadata
