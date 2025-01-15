@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Show()
----------------------------
+get_Show
+--------
 
 ### Synopsis
 Gets Show Metadata
