@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Mood()
----------------------------
+set_Mood
+--------
 
 ### Synopsis
 Sets the Mood Metadata
