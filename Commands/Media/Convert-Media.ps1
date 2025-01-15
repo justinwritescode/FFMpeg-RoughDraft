@@ -102,6 +102,10 @@
     [Timespan]
     $Duration,
 
+    # The number of frames to convert.
+    [int]
+    $FrameCount,
+
     # If provided, will use an ffmpeg preset to encode.
     # This maps to the --preset parameter in ffmpeg.
     [Parameter(ValueFromPipelineByPropertyName)]
@@ -324,6 +328,11 @@
             if ($Duration) {
                 $TimeFrame += '-t'
                 $TimeFrame += "$($Duration.TotalSeconds)"
+            }
+            
+            if ($FrameCount) {
+                $TimeFrame += '-frames:v'
+                $TimeFrame += "$FrameCount"
             }
 
             if ($PSBoundParameters.VideoFrameCount) { # If we were provided a frame count
