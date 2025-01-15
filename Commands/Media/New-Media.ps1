@@ -20,6 +20,9 @@
     [Timespan]
     $Duration = '00:00:01',
 
+    [int]
+    $FrameCount,
+
     # The resolution.  This can be independently handled by an extension.
     [string]
     $Resolution,
@@ -69,7 +72,9 @@
         $uro = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
         $ffEndArgs  = @(
             if ($PixelFormat) { '-pix_fmt', $PixelFormat }
-            '-t', $Duration.TotalSeconds, '-y', "$uro"
+            if ($FrameCount) { '-frames:v', $FrameCount }
+            else { '-t', $Duration.TotalSeconds }
+            '-y', "$uro"
         )
 
         #region Handle Extensions
