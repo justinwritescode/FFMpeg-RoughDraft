@@ -96,7 +96,7 @@
         } while (0)
         #endregion Handle Extensions
 
-        $allFffMpegArgs = @('-hide_banner') +  $ffmpegArgs + $FilterParams + $ffEndArgs
+        $allFffMpegArgs = @() +  $ffmpegArgs + $FilterParams + $ffEndArgs
         $progressId = Get-Random
         $theDuration = $Duration
         Use-FFMpeg -FFMpegPath $ffMpegPath -FFMpegArgument $allFffMpegArgs |
