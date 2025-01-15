@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Lyric()
-----------------------------
+get_Lyric
+---------
 
 ### Synopsis
 Gets InitialKey Metadata
