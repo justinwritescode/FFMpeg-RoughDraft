@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Comment()
-------------------------------
+set_Comment
+-----------
 
 ### Synopsis
 Sets the Comment Metadata
