@@ -1,7 +1,7 @@
 ## RoughDraft.Media
 
 
-### Script Methods
+### Script Properties
 
 
 * [get_Album](get_Album.md)
