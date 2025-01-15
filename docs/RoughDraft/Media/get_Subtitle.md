@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Subtitle()
--------------------------------
+get_Subtitle
+------------
 
 ### Synopsis
 Gets Subtitle Metadata
