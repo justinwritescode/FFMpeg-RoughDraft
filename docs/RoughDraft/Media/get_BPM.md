@@ -1,5 +1,5 @@
-RoughDraft.Media.get_BPM()
---------------------------
+get_BPM
+-------
 
 ### Synopsis
 Gets BPM Metadata
