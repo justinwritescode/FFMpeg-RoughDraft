@@ -41,26 +41,32 @@ The duration.  By default, one second.
 |------------|--------|--------|-------------|
 |`[TimeSpan]`|false   |2       |false        |
 
+#### **FrameCount**
+
+|Type     |Required|Position|PipelineInput|
+|---------|--------|--------|-------------|
+|`[Int32]`|false   |3       |false        |
+
 #### **Resolution**
 The resolution.  This can be independently handled by an extension.
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[String]`|false   |3       |false        |
+|`[String]`|false   |4       |false        |
 
 #### **PixelFormat**
 If provided, will use a specific pixel format for video and image output.  This maps to the -pix_fmt parameter in ffmpeg.
 
 |Type      |Required|Position|PipelineInput        |Aliases|
 |----------|--------|--------|---------------------|-------|
-|`[String]`|false   |4       |true (ByPropertyName)|Pix_Fmt|
+|`[String]`|false   |5       |true (ByPropertyName)|Pix_Fmt|
 
 #### **FFMpegArgument**
 A list of additional arguments to FFMpeg.
 
 |Type        |Required|Position|PipelineInput|Aliases                                |
 |------------|--------|--------|-------------|---------------------------------------|
-|`[String[]]`|false   |5       |false        |Arguments<br/>Argument<br/>ArgumentList|
+|`[String[]]`|false   |6       |false        |Arguments<br/>Argument<br/>ArgumentList|
 
 #### **AsJob**
 If set, will create the media in a background job.
@@ -76,7 +82,7 @@ Throttling is only available if running on PowerShell Core.
 
 |Type     |Required|Position|PipelineInput|
 |---------|--------|--------|-------------|
-|`[Int32]`|false   |6       |false        |
+|`[Int32]`|false   |7       |false        |
 
 ---
 
@@ -89,5 +95,5 @@ Throttling is only available if running on PowerShell Core.
 
 ### Syntax
 ```PowerShell
-New-Media [-OutputPath] <String> [[-Duration] <TimeSpan>] [[-Resolution] <String>] [[-PixelFormat] <String>] [[-FFMpegArgument] <String[]>] [-AsJob] [[-ThrottleLimit] <Int32>] [<CommonParameters>]
+New-Media [-OutputPath] <String> [[-Duration] <TimeSpan>] [[-FrameCount] <Int32>] [[-Resolution] <String>] [[-PixelFormat] <String>] [[-FFMpegArgument] <String[]>] [-AsJob] [[-ThrottleLimit] <Int32>] [<CommonParameters>]
 ```
