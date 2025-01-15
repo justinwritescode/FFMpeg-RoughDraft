@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Synopsis()
--------------------------------
+get_Synopsis
+------------
 
 ### Synopsis
 Gets Synopsis Metadata
