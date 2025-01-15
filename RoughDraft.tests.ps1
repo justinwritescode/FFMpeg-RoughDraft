@@ -28,7 +28,7 @@ describe Convert-Media {
 
     it 'Can turn a still image into a video' {
         $tmpOutPath = Join-Path "$pwd" "testsrc2$(Get-Random).png"
-        $converted  = New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -Duration "00:00:01" |
+        $converted  = New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -FrameCount 1 |
             Convert-Media -OutputPath mp4 -Duration "00:15:00"
         $converted |
             Select-Object -ExpandProperty Extension |
@@ -181,7 +181,7 @@ describe Join-Media {
                 Join-Path "$pwd" "lapsePart$(Get-Random).jpg"
             }
 
-        $newImages = $tmpOutPaths | New-Media -OutputPath { $_ } -TestSource rgbtestsrc
+        $newImages = $tmpOutPaths | New-Media -OutputPath { $_ } -TestSource rgbtestsrc -FrameCount 1
 
         $lapseOutPath = Join-Path "$pwd" "lapse$(Get-Random).mp4"
         $lapseFile = $newImages | Join-Media -OutputPath $lapseOutPath -TimeLapse
@@ -245,7 +245,7 @@ describe Set-Media {
     it 'Can set album artwork' {
         $tmpOutPath = Join-Path "$pwd" "sine$(Get-Random).mp3"
         $tmpOutPath2 = Join-Path "$pwd" "sine$(Get-Random).jpg"
-        New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath2
+        New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath2 -FrameCount 1
         New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
             Set-Media -AlbumArt $tmpOutPath2
 
