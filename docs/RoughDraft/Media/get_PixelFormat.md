@@ -1,5 +1,5 @@
-RoughDraft.Media.get_PixelFormat()
-----------------------------------
+get_PixelFormat
+---------------
 
 ### Synopsis
 Gets a Video or Image PixelFormat
