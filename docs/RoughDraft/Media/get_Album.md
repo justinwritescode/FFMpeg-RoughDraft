@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Album()
-----------------------------
+get_Album
+---------
 
 ### Synopsis
 Gets Album Metadata
