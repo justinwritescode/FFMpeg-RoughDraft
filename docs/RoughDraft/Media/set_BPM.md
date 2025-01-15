@@ -1,5 +1,5 @@
-RoughDraft.Media.set_BPM()
---------------------------
+set_BPM
+-------
 
 ### Synopsis
 Sets the BPM Metadata

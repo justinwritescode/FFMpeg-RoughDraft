@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Copyright()
---------------------------------
+set_Copyright
+-------------
 
 ### Synopsis
 Sets the Copyright Metadata

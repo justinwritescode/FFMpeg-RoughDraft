@@ -1,5 +1,5 @@
-RoughDraft.Media.get_AudioBitrate()
------------------------------------
+get_AudioBitrate
+----------------
 
 ### Synopsis
 Gets Audio Bitrate

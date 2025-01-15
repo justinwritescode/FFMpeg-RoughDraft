@@ -1,5 +1,5 @@
-RoughDraft.Media.get_AspectRatio()
-----------------------------------
+get_AspectRatio
+---------------
 
 ### Synopsis
 Gets a Video or Image Aspect Ratio

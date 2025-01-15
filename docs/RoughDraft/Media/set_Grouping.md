@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Grouping()
--------------------------------
+set_Grouping
+------------
 
 ### Synopsis
 Sets the Grouping Metadata

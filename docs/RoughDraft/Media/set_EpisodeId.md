@@ -1,5 +1,5 @@
-RoughDraft.Media.set_EpisodeId()
---------------------------------
+set_EpisodeId
+-------------
 
 ### Synopsis
 Sets the EpisodeID Metadata

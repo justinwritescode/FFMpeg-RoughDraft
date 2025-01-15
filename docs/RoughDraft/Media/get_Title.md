@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Title()
-----------------------------
+get_Title
+---------
 
 ### Synopsis
 Gets Title Metadata

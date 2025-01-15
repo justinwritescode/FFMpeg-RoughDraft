@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Artist()
------------------------------
+set_Artist
+----------
 
 ### Synopsis
 Sets the Artist Metadata

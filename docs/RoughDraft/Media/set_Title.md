@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Title()
-----------------------------
+set_Title
+---------
 
 ### Synopsis
 Sets the Title Metadata

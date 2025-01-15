@@ -1,5 +1,5 @@
-RoughDraft.Media.set_AlbumArtist()
-----------------------------------
+set_AlbumArtist
+---------------
 
 ### Synopsis
 Sets the Album Artist Metadata

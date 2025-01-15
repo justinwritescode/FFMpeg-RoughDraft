@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Disc()
----------------------------
+set_Disc
+--------
 
 ### Synopsis
 Sets the Disc Metadata

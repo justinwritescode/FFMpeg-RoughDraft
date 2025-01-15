@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Location()
--------------------------------
+get_Location
+------------
 
 ### Synopsis
 Gets Location Metadata

@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Description()
-----------------------------------
+set_Description
+---------------
 
 ### Synopsis
 Sets the Description Metadata

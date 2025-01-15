@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Location()
--------------------------------
+set_Location
+------------
 
 ### Synopsis
 Sets the Location Metadata

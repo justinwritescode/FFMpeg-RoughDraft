@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Composer()
--------------------------------
+set_Composer
+------------
 
 ### Synopsis
 Sets the Composer Metadata

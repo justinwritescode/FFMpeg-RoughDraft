@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Artist()
------------------------------
+get_Artist
+----------
 
 ### Synopsis
 Gets Artist Metadata

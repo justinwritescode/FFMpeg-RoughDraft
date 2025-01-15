@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Comment()
-------------------------------
+get_Comment
+-----------
 
 ### Synopsis
 Gets Comment Metadata

@@ -1,5 +1,5 @@
-RoughDraft.Media.get_VideoBitrate()
------------------------------------
+get_VideoBitrate
+----------------
 
 ### Synopsis
 Gets a Video's Bitrate

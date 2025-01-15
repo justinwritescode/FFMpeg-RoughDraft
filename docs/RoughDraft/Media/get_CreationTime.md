@@ -1,5 +1,5 @@
-RoughDraft.Media.get_CreationTime()
------------------------------------
+get_CreationTime
+----------------
 
 ### Synopsis
 Gets Creation Time Metadata

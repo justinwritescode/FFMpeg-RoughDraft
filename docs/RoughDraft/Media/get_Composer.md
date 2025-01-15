@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Composer()
--------------------------------
+get_Composer
+------------
 
 ### Synopsis
 Gets Composer Metadata

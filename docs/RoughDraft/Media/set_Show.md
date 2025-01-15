@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Show()
----------------------------
+set_Show
+--------
 
 ### Synopsis
 Sets the Show Metadata

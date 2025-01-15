@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Network()
-------------------------------
+get_Network
+-----------
 
 ### Synopsis
 Gets Network Metadata

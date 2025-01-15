@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Genre()
-----------------------------
+get_Genre
+---------
 
 ### Synopsis
 Gets Genre Metadata

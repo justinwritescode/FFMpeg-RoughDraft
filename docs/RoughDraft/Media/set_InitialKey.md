@@ -1,5 +1,5 @@
-RoughDraft.Media.set_InitialKey()
----------------------------------
+set_InitialKey
+--------------
 
 ### Synopsis
 Sets the InitialKey Metadata
