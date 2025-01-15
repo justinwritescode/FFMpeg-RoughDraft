@@ -1,5 +1,5 @@
-RoughDraft.Media.get_Publisher()
---------------------------------
+get_Publisher
+-------------
 
 ### Synopsis
 Gets Publisher Metadata
