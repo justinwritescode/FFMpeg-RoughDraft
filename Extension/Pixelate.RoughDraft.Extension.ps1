@@ -26,4 +26,4 @@ $PixelationHeight
 if (-not $PixelationHeight) { $PixelationHeight = $PixelationWidth }
 
 "-vf"
-"`"scale='$($PixelationWidth):$PixelationHeight',scale='$($mediaInfo.Resolution -replace 'x', ':'):flags=neighbor'`""
+"scale='$($PixelationWidth):$PixelationHeight',scale='$($mediaInfo.Resolution -replace 'x', ':'):flags=neighbor'"
