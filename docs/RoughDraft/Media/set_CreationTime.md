@@ -1,5 +1,5 @@
-RoughDraft.Media.set_CreationTime()
------------------------------------
+set_CreationTime
+----------------
 
 ### Synopsis
 Sets the Creation Time Metadata
