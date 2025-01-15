@@ -1,5 +1,5 @@
-RoughDraft.Media.set_Genre()
-----------------------------
+set_Genre
+---------
 
 ### Synopsis
 Sets the Genre Metadata
