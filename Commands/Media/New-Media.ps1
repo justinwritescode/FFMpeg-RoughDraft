@@ -28,7 +28,7 @@
     [Parameter(ValueFromPipelineByPropertyName)]
     [Alias('Pix_Fmt')]
     [string]
-    $PixelFormat =  'yuv420p',
+    $PixelFormat,
 
     # A list of additional arguments to FFMpeg.
     [Alias('Arguments','Argument','ArgumentList')]
@@ -67,7 +67,10 @@
         $FilterParams = @()
         $ffmpegArgs = @($FFMpegArgument)
         $uro = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputPath)
-        $ffEndArgs  = @('-pix_fmt', $PixelFormat, '-t', $Duration.TotalSeconds, '-y', "$uro")
+        $ffEndArgs  = @(
+            if ($PixelFormat) { '-pix_fmt', $PixelFormat }
+            '-t', $Duration.TotalSeconds, '-y', "$uro"
+        )
 
         #region Handle Extensions
         :nextFile do {
