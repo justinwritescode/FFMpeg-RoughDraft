@@ -1,5 +1,5 @@
-RoughDraft.Media.get_EpisodeId()
---------------------------------
+get_EpisodeId
+-------------
 
 ### Synopsis
 Gets EpisodeID Metadata
