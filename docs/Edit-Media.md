@@ -115,6 +115,9 @@ This maps to the ffmpeg parameter -to.
 |`[TimeSpan]`|false   |4       |true (ByPropertyName)|EndTime|
 
 #### **Offset**
+If provided, will offset all streams by the specified time.
+This maps to the ffmpeg parameter `-itsoffset` (on the first input)
+A positive timespan will delay the stream, a negative timespan will advance the stream.
 
 |Type        |Required|Position|PipelineInput        |
 |------------|--------|--------|---------------------|
