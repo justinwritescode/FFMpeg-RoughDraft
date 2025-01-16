@@ -143,7 +143,7 @@ describe Join-Media {
         Remove-Item $videoTmpPath
 
     }
-    it 'Can join files of different codecs' {
+    it 'Can join files' {
         $videoTmpPaths = @(
             Join-Path "$pwd" "Video$(Get-Random).mp4"
             Join-Path "$pwd" "Video$(Get-Random).mp4"
@@ -152,7 +152,7 @@ describe Join-Media {
         $audioTmpPaths = @(
             Join-Path "$pwd" "Audio$(Get-Random).wav"
             Join-Path "$pwd" "Audio$(Get-Random).wav"
-            Join-Path "$pwd" "JoinedAudio$(Get-Random).mp3"
+            Join-Path "$pwd" "JoinedAudio$(Get-Random).wav"
         )
 
         @(
@@ -174,6 +174,7 @@ describe Join-Media {
             Should -Be 1
 
         $videoTmpPaths | Remove-Item
+        $audioTmpPaths | Remove-Item
     }
     it 'Can make a timelapse from a series of images' {
         $tmpOutPaths =
