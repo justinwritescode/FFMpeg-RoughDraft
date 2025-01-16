@@ -84,6 +84,9 @@
     [Timespan]
     $End,
 
+    # If provided, will offset all streams by the specified time.
+    # This maps to the ffmpeg parameter `-itsoffset` (on the first input)
+    # A positive timespan will delay the stream, a negative timespan will advance the stream.    
     [Parameter(ValueFromPipelineByPropertyName)]
     [TimeSpan]
     $Offset,
@@ -254,7 +257,9 @@
         }
 
         if ($mediaInfo.streams -and @($mediainfo.streams)[0].codec_type -eq 'video') {
-            $ffmpegParams += '-pix_fmt', $PixelFormat
+            if ($PixelFormat) {
+                $ffmpegParams += '-pix_fmt', $PixelFormat
+            }            
         }
 
         if ($tune) { # If -Tune was provided
