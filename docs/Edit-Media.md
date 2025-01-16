@@ -114,6 +114,12 @@ This maps to the ffmpeg parameter -to.
 |------------|--------|--------|---------------------|-------|
 |`[TimeSpan]`|false   |4       |true (ByPropertyName)|EndTime|
 
+#### **Offset**
+
+|Type        |Required|Position|PipelineInput        |
+|------------|--------|--------|---------------------|
+|`[TimeSpan]`|false   |named   |true (ByPropertyName)|
+
 #### **Duration**
 The duration of the media.
 This maps to the ffmpeg parameter -t.
@@ -209,5 +215,5 @@ Using Edit-Media in a fluent pipeline will allow you to easily control the order
 
 ### Syntax
 ```PowerShell
-Edit-Media [-InputPath] <String[]> [[-OutputPath] <String>] [-OutputMap <IDictionary>] [-Codec <String>] [-FFMpegPath <String>] [-PixelFormat <String>] [-Preset <String>] [-Tune <String>] [-MetaData <IDictionary>] [[-Start] <TimeSpan>] [[-End] <TimeSpan>] [[-Duration] <TimeSpan>] [-VideoFilter <IDictionary>] [-AudioFilter <IDictionary>] [-ComplexFilter <IDictionary[]>] [-ThreadCount <String>] [-FFMpegArgument <String[]>] [-AsJob] [-ThrottleLimit <Int32>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Edit-Media [-InputPath] <String[]> [[-OutputPath] <String>] [-OutputMap <IDictionary>] [-Codec <String>] [-FFMpegPath <String>] [-PixelFormat <String>] [-Preset <String>] [-Tune <String>] [-MetaData <IDictionary>] [[-Start] <TimeSpan>] [[-End] <TimeSpan>] [-Offset <TimeSpan>] [[-Duration] <TimeSpan>] [-VideoFilter <IDictionary>] [-AudioFilter <IDictionary>] [-ComplexFilter <IDictionary[]>] [-ThreadCount <String>] [-FFMpegArgument <String[]>] [-AsJob] [-ThrottleLimit <Int32>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
