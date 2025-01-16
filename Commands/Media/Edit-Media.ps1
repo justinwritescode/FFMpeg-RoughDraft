@@ -84,6 +84,10 @@
     [Timespan]
     $End,
 
+    [Parameter(ValueFromPipelineByPropertyName)]
+    [TimeSpan]
+    $Offset,
+
     # The duration of the media.
     # This maps to the ffmpeg parameter -t.
     [Parameter(Position=4, ValueFromPipelineByPropertyName)]
@@ -469,7 +473,7 @@
         if ($WhatIfPreference) { return $ffMpegFullArgs } # If -WhatIf was passed, return the FFMpeg Arguments.
         if ($uro -and (Test-Path $uro)) {
             # If we have only one output, and it already exists.
-            $ExistingOutput = Get-Item -LiteralPath $uro
+            $ExistingOutput = Get-Item -LiteralPath $uro            
             if ($ExistingOutput.Length -gt 0) {
                 $clixmlPath     = 
                         Join-Path $ExistingOutput.Directory.FullName (
