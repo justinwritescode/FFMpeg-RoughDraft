@@ -52,7 +52,7 @@
     [Parameter(ValueFromPipelineByPropertyName)]
     [Alias('Pix_Fmt')]
     [string]
-    $PixelFormat = 'yuv420p',
+    $PixelFormat,
 
     # If provided, will use an ffmpeg preset to encode.
     # This maps to the --preset parameter in ffmpeg.
