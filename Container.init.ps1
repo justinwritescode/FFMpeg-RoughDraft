@@ -22,7 +22,8 @@
     That is why this file is using the namespace 'mcr.microsoft.com/powershell'.
     (this does nothing, but most likely will be used in the future)
 #>
-using namespace 'mcr.microsoft.com/powershell'
+
+#use container 'mcr.microsoft.com/powershell'
 
 param(
 # The name of the module to be installed.
