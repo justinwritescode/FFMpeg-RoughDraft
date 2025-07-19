@@ -209,7 +209,7 @@ if ($commandName -eq 'Edit-Media') {
     }
     
     "-filter_complex"
-    "[0:a]showspectrum=${filterargs},format=$pixelFormat[v]",
+    "[0:a]showspectrum=${filterargs}[v]",
     "-map",
     "[v]",
     "-map",

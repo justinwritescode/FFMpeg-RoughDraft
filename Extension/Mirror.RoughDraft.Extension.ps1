@@ -43,31 +43,25 @@ if ($Mirror) {
     if ($horizontalMirror) {
         # Horizontal Mirror
         @'
-"
 crop=iw:ih/2:0:0,split[top][tmp];
 [tmp]vflip[bottom];
 [top][bottom] vstack
-"
 '@
     }
     elseif ($QuadMirror) {
         @'
-"
 crop=iw/2:ih/2:0:0,split[top][tmp];
 [tmp]vflip[bottom];
 [top][bottom] vstack, split[left][righttmp];
 [righttmp]hflip[right];
 [left][right] hstack
-"
 '@        
     } else {
         # Vertical Mirror
         @'
-"
 crop=iw/2:ih:0:0,split[left][tmp];
 [tmp]hflip[right];
 [left][right] hstack
-"
 '@
     }
 }

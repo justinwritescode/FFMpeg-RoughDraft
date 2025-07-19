@@ -286,7 +286,7 @@ if ($commandName -eq 'Edit-Media') {
         }
     }
     "-filter_complex"
-    "[0:a]showcqt=${filterargs},format=$pixelFormat[v]",
+    "[0:a]showcqt=${filterargs}[v]",
     "-map",
     "[v]",
     "-map",

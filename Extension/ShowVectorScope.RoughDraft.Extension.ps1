@@ -159,7 +159,7 @@ if ($commandName -eq 'Edit-Media') {
         }
     }
     "-filter_complex"
-    "[0:a]avectorscope=${filterargs},format=$pixelFormat[v]",
+    "[0:a]avectorscope=${filterargs}[v]",
     "-map",
     "[v]",
     "-map",

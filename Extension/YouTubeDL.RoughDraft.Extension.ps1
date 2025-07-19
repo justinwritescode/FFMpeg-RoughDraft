@@ -4,7 +4,7 @@
 .DESCRIPTION
     Extends Get-Media to enable the downloading of videos from YouTube and other sources, using YouTubeDL
 .LINK
-    http://ytdl-org.github.io/youtube-dl/
+    https://github.com/yt-dlp/yt-dlp/
 #>
 [Management.Automation.Cmdlet("Get","Media")]
 [ComponentModel.Inheritance("NotInherited")] # that is not inherited (this is the default).
@@ -38,7 +38,13 @@ $YouTubeDownloadArgumentList,
 # If set, will return the information about the download, instead of downloading.
 [Alias('YouTubeDLInfo', 'YouTubeInfo')]
 [switch]
-$YouTubeDownloadInformation
+$YouTubeDownloadInformation,
+
+[switch]
+$YouTubeNoEmbedMetadata,
+
+[switch]
+$YouTubeNoEmbedSubTitle
 )
 
 $roughDraftRoot = Join-Path $home ".RoughDraft"
@@ -48,16 +54,21 @@ if (-not (Test-Path -Path $roughDraftRoot)) {
 
 $YouTubeDLName =
     if ($PSVersionTable.PlatForm -like 'Win*' -or -not $PSVersionTable.Platform) {
-        "youtube-dl.exe"
+        "yt-dlp.exe"
     } else {
-        "youtube-dl"
+        "yt-dlp"
     }
+
 $YouTubeDLPath = Join-Path $roughDraftRoot $YouTubeDLName
 
 if ($DownloadLatestYouTubeDL -or -not (Test-Path $YouTubeDLPath)) {
-    $latestRelease = Invoke-RestMethod -Uri https://api.github.com/repos/ytdl-org/youtube-dl/releases?per_page=1
+    $latestRelease = Invoke-RestMethod -Uri https://api.github.com/repos/yt-dlp/yt-dlp/releases?per_page=1
     $assetUrl = $latestRelease.Assets | Where-Object Name -eq $YouTubeDLName | Select-Object -ExpandProperty Browser_Download_Url
     [Net.WebClient]::new().DownloadFile($assetUrl, "$YouTubeDLPath")
+
+    if ($PSVersionTable.Platform -notmatch 'Win') {
+        $null = chmod +x $YouTubeDLPath
+    }
 }
 
 $AllYouTubeDLArgs  = @(
@@ -68,8 +79,15 @@ $AllYouTubeDLArgs  = @(
         "--all-subs"        
     }
     if ($YouTubeDownloadInformation) {
-        '--json'
+        '--dump-json'
     }
+    if (-not $YouTubeNoEmbedMetadata) {
+        '--embed-metadata'
+    }    
+    if (-not $YouTubeNoEmbedSubTitle) {
+        '--embed-subs'
+    }
+
     if ($YouTubeOutputFile) {
         '-o'
         $YouTubeOutputFile

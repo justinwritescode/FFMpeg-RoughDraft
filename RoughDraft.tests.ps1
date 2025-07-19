@@ -10,9 +10,9 @@
 
 describe Convert-Media {
     it 'Can convert media between formats' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).mkv"
-        $mp4Path    = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).mp4"
-        $converted  = New-Media -TestSource testsrc -OutputPath $tmpOutPath -Duration "00:00:01" |
+        $tmpOutPath = Join-Path "$pwd" "testsrc2$(Get-Random).mkv"
+        $mp4Path    = Join-Path "$pwd" "testsrc2$(Get-Random).mp4"
+        $converted  = New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -Duration "00:00:01" |
             Convert-Media -OutputPath $mp4Path
         $converted |
             Select-Object -ExpandProperty Extension |
@@ -27,8 +27,8 @@ describe Convert-Media {
     }
 
     it 'Can turn a still image into a video' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).png"
-        $converted  = New-Media -TestSource testsrc -OutputPath $tmpOutPath -Duration "00:00:01" |
+        $tmpOutPath = Join-Path "$pwd" "testsrc2$(Get-Random).png"
+        $converted  = New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -FrameCount 1 |
             Convert-Media -OutputPath mp4 -Duration "00:15:00"
         $converted |
             Select-Object -ExpandProperty Extension |
@@ -42,9 +42,9 @@ describe Convert-Media {
     }
 
     it 'Can use an extension to -Resize while converting' {
-        $tmpOutPath  = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).mp4"
-        $tmpOutPath2 = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).mp4"
-        $converted   = New-Media -TestSource testsrc -OutputPath $tmpOutPath -Duration "00:00:05" |
+        $tmpOutPath  = Join-Path "$pwd" "testsrc2$(Get-Random).mp4"
+        $tmpOutPath2 = Join-Path "$pwd" "testsrc2$(Get-Random).mp4"
+        $converted   = New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -Duration "00:00:05" |
             Convert-Media -OutputPath $tmpOutPath2 -Resize '1024x720'
         $converted | Get-Media | Select-Object -ExpandProperty Resolution | Should -Be '1024x720'
         Remove-Item $tmpOutPath
@@ -53,8 +53,8 @@ describe Convert-Media {
 
     context "Error Handling" {
         it 'Will complain when no codec is found' {
-            $tmpOutPath  = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).png"
-            New-Media -TestSource testsrc -OutputPath $tmpOutPath -Duration "00:00:05"
+            $tmpOutPath  = Join-Path "$pwd" "testsrc2$(Get-Random).png"
+            New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -FrameCount 1
             $err = @()
             Get-Item $tmpOutPath | Convert-Media -Codec askljska -ErrorAction SilentlyContinue -OutputPath .\test.mp4  -ErrorVariable err
 
@@ -66,9 +66,9 @@ describe Convert-Media {
 
 describe ConvertTo-GIF {
     it 'Can make gifs' {
-        $tmpOutPath  = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp3"
-        $tmpOutPath2 = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp4"
-        $tmpOutPath3 = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).gif"
+        $tmpOutPath  = Join-Path "$pwd" "sine$(Get-Random).mp3"
+        $tmpOutPath2 = Join-Path "$pwd" "sine$(Get-Random).mp4"
+        $tmpOutPath3 = Join-Path "$pwd" "sine$(Get-Random).gif"
         $waveform    = New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
             Edit-Media -ShowWaveform -ShowWaveformMode line -OutputPath $tmpOutPath2
 
@@ -85,7 +85,7 @@ describe ConvertTo-GIF {
 
 describe Edit-Media {
     it 'Can edit media' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "colorspectrum$(Get-Random).mp4"
+        $tmpOutPath = Join-Path "$pwd" "colorspectrum$(Get-Random).mp4"
         $edited = New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath -Duration "00:00:05" |
             Edit-media -Sepia
 
@@ -100,8 +100,8 @@ describe Edit-Media {
 
     context "Error Handling" {
         it 'Will complain when no codec is found' {
-            $tmpOutPath  = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).png"
-            New-Media -TestSource testsrc -OutputPath $tmpOutPath -Duration "00:00:05"
+            $tmpOutPath  = Join-Path "$pwd" "testsrc2$(Get-Random).png"
+            New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -FrameCount 1
             $err = @()
             Get-Item $tmpOutPath | Edit-Media -Codec askljska -ErrorAction SilentlyContinue -OutputPath .\test.mp4  -ErrorVariable err -FadeIn
 
@@ -113,7 +113,7 @@ describe Edit-Media {
 
 describe Get-Media {
     it 'Can detect volume' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp3"
+        $tmpOutPath = Join-Path "$pwd" "sine$(Get-Random).mp3"
         New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
             Get-Media -VolumeLevel |
             Out-String  |
@@ -125,9 +125,9 @@ describe Get-Media {
 
 describe Join-Media {
     it 'Can combine an audio file and a video file' {
-        $videoTmpPath = Join-Path ([IO.Path]::GetTempPath()) "Video$(Get-Random).mp4"
-        $audioTmpPath = Join-Path ([IO.Path]::GetTempPath()) "Audio$(Get-Random).mp3"
-        $avTmpPath    = Join-Path ([IO.Path]::GetTempPath()) "AV$(Get-Random).mp4"
+        $videoTmpPath = Join-Path "$pwd" "Video$(Get-Random).mp4"
+        $audioTmpPath = Join-Path "$pwd" "Audio$(Get-Random).mp3"
+        $avTmpPath    = Join-Path "$pwd" "AV$(Get-Random).mp4"
         @(
             New-Media -TestSource rgbtestsrc -Duration "00:00:30" -OutputPath $videoTmpPath
             New-Media -Sine -Duration "00:00:15" -OutputPath $audioTmpPath
@@ -143,16 +143,16 @@ describe Join-Media {
         Remove-Item $videoTmpPath
 
     }
-    it 'Can join files of different codecs' {
+    it 'Can join files' {
         $videoTmpPaths = @(
-            Join-Path ([IO.Path]::GetTempPath()) "Video$(Get-Random).mp4"
-            Join-Path ([IO.Path]::GetTempPath()) "Video$(Get-Random).mp4"
-            Join-Path ([IO.Path]::GetTempPath()) "JoinedVideo$(Get-Random).mp4"
+            Join-Path "$pwd" "Video$(Get-Random).mp4"
+            Join-Path "$pwd" "Video$(Get-Random).mp4"
+            Join-Path "$pwd" "JoinedVideo$(Get-Random).mp4"
         )
         $audioTmpPaths = @(
-            Join-Path ([IO.Path]::GetTempPath()) "Audio$(Get-Random).mp3"
-            Join-Path ([IO.Path]::GetTempPath()) "Audio$(Get-Random).wav"
-            Join-Path ([IO.Path]::GetTempPath()) "JoinedAudio$(Get-Random).mp3"
+            Join-Path "$pwd" "Audio$(Get-Random).wav"
+            Join-Path "$pwd" "Audio$(Get-Random).wav"
+            Join-Path "$pwd" "JoinedAudio$(Get-Random).wav"
         )
 
         @(
@@ -174,16 +174,17 @@ describe Join-Media {
             Should -Be 1
 
         $videoTmpPaths | Remove-Item
+        $audioTmpPaths | Remove-Item
     }
     it 'Can make a timelapse from a series of images' {
         $tmpOutPaths =
             foreach ($n in 1..30) {
-                Join-Path ([IO.Path]::GetTempPath()) "lapsePart$(Get-Random).jpg"
+                Join-Path "$pwd" "lapsePart$(Get-Random).jpg"
             }
 
-        $newImages = $tmpOutPaths | New-Media -OutputPath { $_ } -TestSource rgbtestsrc
+        $newImages = $tmpOutPaths | New-Media -OutputPath { $_ } -TestSource rgbtestsrc -FrameCount 1
 
-        $lapseOutPath = Join-Path ([IO.Path]::GetTempPath()) "lapse$(Get-Random).mp4"
+        $lapseOutPath = Join-Path "$pwd" "lapse$(Get-Random).mp4"
         $lapseFile = $newImages | Join-Media -OutputPath $lapseOutPath -TimeLapse
         $lapseFile | Get-Media | Select-Object -ExpandProperty Duration | Should -BeLike '00:00:01*'
 
@@ -194,8 +195,8 @@ describe Join-Media {
 
 describe New-Media {
     it 'Can create A test source' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "testsrc$(Get-Random).mp4"
-        New-Media -TestSource testsrc -OutputPath $tmpOutPath -Duration "00:00:05" |
+        $tmpOutPath = Join-Path "$pwd" "testsrc2$(Get-Random).mp4"
+        New-Media -TestSource testsrc2 -OutputPath $tmpOutPath -Duration "00:00:05" |
             Get-Media |
             Select-Object -ExpandProperty Duration |
             Should -Be "00:00:05"
@@ -204,7 +205,7 @@ describe New-Media {
     }
 
     it 'Can create audio' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp3"
+        $tmpOutPath = Join-Path "$pwd" "sine$(Get-Random).mp3"
         New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
             Get-Media |
             Select-Object -ExpandProperty Duration |
@@ -213,7 +214,7 @@ describe New-Media {
     }
 
     it 'Can make a fractal' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "mandelbrot$(Get-Random).mp4"
+        $tmpOutPath = Join-Path "$pwd" "mandelbrot$(Get-Random).mp4"
         New-Media -Mandelbrot -OutputPath $tmpOutPath -Duration "00:00:05" |
             Get-Media |
             Select-Object -ExpandProperty Duration |
@@ -227,19 +228,25 @@ describe New-Media {
 
 describe Set-Media {
     it 'Can set media metadata' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp3"
-        New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
+        $tmpOutPath = Join-Path "$pwd" "sine$(Get-Random).wav"
+        $tmpMp3Path = $tmpOutPath -replace '\.wav$', '.mp3'
+        $convertedToMp3 = New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
+            Convert-Media -OutputPath $tmpMp3Path
+        Start-Sleep -Milliseconds 10
+        $convertedToMp3 |
             Set-Media -Property @{title='sine'}
 
-        Get-Item $tmpOutPath | Get-Media | Select-Object -ExpandProperty title | should -BeLike sine*
+        $mediaInfo = Get-Item $convertedToMp3 | Get-Media 
+        $mediaInfo.Title | Should -BeLike sine*
 
         Remove-Item $tmpOutPath
+        Remove-Item $tmpMp3Path
     }
 
     it 'Can set album artwork' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp3"
-        $tmpOutPath2 = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).jpg"
-        New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath2
+        $tmpOutPath = Join-Path "$pwd" "sine$(Get-Random).mp3"
+        $tmpOutPath2 = Join-Path "$pwd" "sine$(Get-Random).jpg"
+        New-Media -TestSource rgbtestsrc -OutputPath $tmpOutPath2 -FrameCount 1
         New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
             Set-Media -AlbumArt $tmpOutPath2
 
@@ -253,7 +260,7 @@ describe Set-Media {
 
 describe Split-Media {
     it 'Can Split on a timespan' {
-        $tmpOutPath = Join-Path ([IO.Path]::GetTempPath()) "sine$(Get-Random).mp3"
+        $tmpOutPath = Join-Path "$pwd" "sine$(Get-Random).mp3"
         New-Media -Sine -OutputPath $tmpOutPath -Duration "00:00:05" |
             Split-Media -Start "00:00:02.1230300" |
             Get-Media | 

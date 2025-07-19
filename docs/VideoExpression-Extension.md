@@ -1,49 +1,35 @@
 Extension/VideoExpression.RoughDraft.Extension.ps1
 --------------------------------------------------
 
-
-
-
 ### Synopsis
 Evaluates Video Expressions
 
-
-
 ---
-
 
 ### Description
 
 Evaluates Video Expressions, using the [geq filter](https://ffmpeg.org/ffmpeg-filters.html#geq)
 
-
-
 ---
-
 
 ### Related Links
 * [https://ffmpeg.org/ffmpeg-filters.html#geq](https://ffmpeg.org/ffmpeg-filters.html#geq)
 
-
-
-
-
 ---
 
-
 ### Examples
-#### EXAMPLE 1
+Flips a video horizontally
+
 ```PowerShell
-# Flips a video horizontally
 Edit-Media -InputPath .\a.mp4 -VideoExpression 'p(W-X,Y)'
 ```
+> EXAMPLE 2
 
-#### EXAMPLE 2
 ```PowerShell
 Edit-Media -InputPath .\a.mp4 -VideoExpression 'clip(sin(T*2), -.5,.5)*p(X,Y)'
 ```
+> EXAMPLE 3
 
-#### EXAMPLE 3
 ```PowerShell
 Edit-Media -InputPath .\a.mp4 -VideoExpression 'p(floor((sin(T) * W) -X),Y)'
 Edit-Media -InputPath .\a.mp4 -VideoExpression 'p(        
@@ -56,129 +42,66 @@ Edit-Media -InputPath .\a.mp4 -VideoExpression 'p(
     )
 '
 ```
+Changes color based off of the pixel position
 
-#### EXAMPLE 4
 ```PowerShell
-# Changes color based off of the pixel position
 Edit-Media -InputPath .\a.mp4 -VideoExpression '' -VideoExpressionRed '(X*Y)/(W*H)*r(X,Y)' -VideoExpressionGreen '(1-X/W)*g(X,Y)' -VideoExpressionBlue '(H-Y)/H*b(X,Y)' -Verbose
 ```
 
-
-
 ---
-
 
 ### Parameters
 #### **VideoExpression**
-
 The video luminance expression.
 If you do not wish to provide a luminance expression, pass a blank string to this parameter.
-
-
-
-
-
 
 |Type        |Required|Position|PipelineInput|Aliases     |
 |------------|--------|--------|-------------|------------|
 |`[String[]]`|true    |1       |false        |geq_lum_expr|
 
-
-
 #### **VideoExpressionChrominanceBlue**
-
 Set the chrominance blue expression.
-
-
-
-
-
 
 |Type      |Required|Position|PipelineInput|Aliases    |
 |----------|--------|--------|-------------|-----------|
 |`[String]`|false   |2       |false        |geq_cb_expr|
 
-
-
 #### **VideoExpressionChrominanceRed**
-
 Set the chrominance red expression.
-
-
-
-
-
 
 |Type      |Required|Position|PipelineInput|Aliases    |
 |----------|--------|--------|-------------|-----------|
 |`[String]`|false   |3       |false        |geq_cr_expr|
 
-
-
 #### **VideoExpressionAlpha**
-
 Set the alpha expression.
-
-
-
-
-
 
 |Type      |Required|Position|PipelineInput|Aliases       |
 |----------|--------|--------|-------------|--------------|
 |`[String]`|false   |4       |false        |geq_alpha_expr|
 
-
-
 #### **VideoExpressionRed**
-
 Set the red expression.
-
-
-
-
-
 
 |Type      |Required|Position|PipelineInput|Aliases     |
 |----------|--------|--------|-------------|------------|
 |`[String]`|false   |5       |false        |geq_red_expr|
 
-
-
 #### **VideoExpressionBlue**
-
 Set the green expression.
-
-
-
-
-
 
 |Type      |Required|Position|PipelineInput|Aliases      |
 |----------|--------|--------|-------------|-------------|
 |`[String]`|false   |6       |false        |geq_blue_expr|
 
-
-
 #### **VideoExpressionGreen**
-
 Set the blue expression.
-
-
-
-
-
 
 |Type      |Required|Position|PipelineInput|Aliases       |
 |----------|--------|--------|-------------|--------------|
 |`[String]`|false   |7       |false        |geq_green_expr|
 
-
-
-
-
 ---
-
 
 ### Notes
 The colorspace is selected according to the specified options. If one of the lum_expr, cb_expr, or cr_expr options is specified, the filter will automatically select a YCbCr colorspace. If one of the red_expr, green_expr, or blue_expr options is specified, it will select an RGB colorspace.
@@ -202,10 +125,7 @@ The expressions can use the following variables and functions:
 |alpha(x, y)|Return the value of the pixel at location (x,y) of the alpha plane. Return 0 if there is no such plane.|
 |psum(x,y), lumsum(x, y), cbsum(x,y), crsum(x,y), rsum(x,y), gsum(x,y), bsum(x,y), alphasum(x,y)|Sum of sample values in the rectangle from (0,0) to (x,y), this allows obtaining sums of samples within a rectangle. See the functions without the sum postfix.|
 
-
-
 ---
-
 
 ### Syntax
 ```PowerShell

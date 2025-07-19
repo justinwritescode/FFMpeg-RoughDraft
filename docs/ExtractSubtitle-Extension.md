@@ -1,16 +1,10 @@
 Extension/ExtractSubtitle.RoughDraft.Extension.ps1
 --------------------------------------------------
 
-
-
-
 ### Synopsis
 Extract Subtitle Extension
 
-
-
 ---
-
 
 ### Description
 
@@ -24,21 +18,16 @@ It will be automatically called when converting to:
 * .ssa
 * .vtt
 
-
-
 ---
 
-
 ### Examples
-#### EXAMPLE 1
+> EXAMPLE 1
+
 ```PowerShell
 Convert-Media -InputPath .\a.mp4 -OutputPath .srt
 ```
 
-
-
 ---
-
 
 ### Syntax
 ```PowerShell

@@ -148,7 +148,7 @@ if ($commandName -eq 'Edit-Media') {
         }
     }
     "-filter_complex"
-    "[0:a]showvolume=${filterargs},format=$pixelFormat[v]",
+    "[0:a]showvolume=${filterargs}[v]",
     "-map",
     "[v]",
     "-map",

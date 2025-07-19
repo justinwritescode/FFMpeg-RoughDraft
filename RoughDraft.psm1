@@ -1,25 +1,16 @@
-﻿[Diagnostics.CodeAnalysis.SuppressMessageAttribute("Test-ForSlowScript", "", Justification="Slightly slow scripts will always be faster than media processing.")]
+[Diagnostics.CodeAnalysis.SuppressMessageAttribute("Test-ForSlowScript", "", Justification="Slightly slow scripts will always be faster than media processing.")]
 param()
-#region RoughDraft FFMPEG wrappers
-. $psScriptRoot\Convert-Media.ps1
-. $psScriptRoot\Edit-Media.ps1
-. $psScriptRoot\Get-Media.ps1
-. $psScriptRoot\Join-Media.ps1
-. $psScriptRoot\New-Media.ps1
-. $psScriptRoot\Receive-Media.ps1
-. $psScriptRoot\Set-Media.ps1
-. $psScriptRoot\Send-Media.ps1
-. $psScriptRoot\Show-Media.ps1
-. $psScriptRoot\Split-Media.ps1
-
-. $psScriptRoot\Get-FFMpeg.ps1
-. $psScriptRoot\Get-FFPlay.ps1
-. $psScriptRoot\Get-FFProbe.ps1
-
-. $psScriptRoot\Use-FFMpeg.ps1
-. $psScriptRoot\Use-FFPlay.ps1
-. $psScriptRoot\Use-FFProbe.ps1
-#endregion RoughDraft FFMPEG wrappers
+$CommandsPath = Join-Path $PSScriptRoot Commands
+:ToIncludeFiles foreach ($file in (Get-ChildItem -Path "$CommandsPath" -Filter "*-*.ps1" -Recurse)) {
+    if ($file.Extension -ne '.ps1')      { continue }  # Skip if the extension is not .ps1
+    foreach ($exclusion in '\.[^\.]+\.ps1$') {
+        if (-not $exclusion) { continue }
+        if ($file.Name -match $exclusion) {
+            continue ToIncludeFiles  # Skip excluded files
+        }
+    }     
+    . $file.FullName
+}
 
 Set-Alias ConvertTo-Gif Convert-Media
 
@@ -49,4 +40,22 @@ if ($partsDirectory) { # If we have parts directory
     }
 }
 #endregion Import Parts
+
+#region Export Myself
+
+# Get my module
+$MyModule = $MyInvocation.MyCommand.ScriptBlock.Module
+# and decorate it with my name (this enables extensibility)
+$MyModule.pstypenames.insert(0,$MyModule.Name)
+# and set a variable with my name that points to me.
+$ExecutionContext.SessionState.PSVariable.Set($MyModule.Name, $myModule)
+#endregion Export Myself
+
+#region Mount Myself
+# Mount myself as a drive
+$newDriveSplat = @{PSProvider='FileSystem';ErrorAction='Ignore';Scope='Global'}
+New-PSDrive -Name $MyModule.Name -Root ($MyModule | Split-Path) @newDriveSplat
+#endregion Mount Myself
+
 Export-ModuleMember -Function *-* -Alias *
+

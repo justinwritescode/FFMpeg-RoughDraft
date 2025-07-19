@@ -91,7 +91,7 @@ if ($commandName -eq 'Edit-Media') {
         }
     }
     "-filter_complex"
-    "[0:a]showwaves=${filterargs},format=$pixelFormat[v]",
+    "[0:a]showwaves=${filterargs}[v]",
     "-map",
     "[v]",
     "-map",

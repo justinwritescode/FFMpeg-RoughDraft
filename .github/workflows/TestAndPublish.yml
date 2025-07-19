@@ -117,7 +117,7 @@ jobs:
           Install-Module -Name Pester -Repository PSGallery -Force -Scope CurrentUser -MaximumVersion $PesterMaxVersion -SkipPublisherCheck -AllowClobber
           Import-Module Pester -Force -PassThru -MaximumVersion $PesterMaxVersion} @Parameters
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: RunPester
         id: RunPester
         shell: pwsh
@@ -174,9 +174,6 @@ jobs:
           $result = 
               Invoke-Pester -PassThru -Verbose -OutputFile ".\$moduleName.TestResults.xml" -OutputFormat NUnitXml @codeCoverageParameters
           
-          "::set-output name=TotalCount::$($result.TotalCount)",
-          "::set-output name=PassedCount::$($result.PassedCount)",
-          "::set-output name=FailedCount::$($result.FailedCount)" | Out-Host
           if ($result.FailedCount -gt 0) {
               "::debug:: $($result.FailedCount) tests failed"
               foreach ($r in $result.TestResult) {
@@ -188,7 +185,7 @@ jobs:
           }
           } @Parameters
       - name: PublishTestResults
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@main
         with: 
           name: PesterResults
           path: '**.TestResults.xml'
@@ -579,11 +576,14 @@ jobs:
       - name: Use PSSVG Action
         uses: StartAutomating/PSSVG@main
         id: PSSVG
-      - name: Use RoughDraft Action
+      - name: Run RoughDraft (from main)
+        if: ${{github.ref_name == 'main'}}
         uses: StartAutomating/RoughDraft@main
-        id: RoughDraft
-        with: 
-          CommitMessage: Running RoughDraft [skip ci]
+        id: RoughDraftMain
+      - name: Run RoughDraft (on branch)
+        if: ${{github.ref_name != 'main'}}
+        uses: ./
+        id: RoughDraftBranch
       - name: UsePiecemeal
         uses: StartAutomating/Piecemeal@main
       - name: BuildPipeScript
@@ -592,4 +592,41 @@ jobs:
         uses: StartAutomating/EZOut@master
       - name: UseHelpOut
         uses: StartAutomating/HelpOut@master
-
+      - name: Log in to ghcr.io
+        uses: docker/login-action@master
+        with: 
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract Docker Metadata (for branch)
+        if: ${{github.ref_name != 'main' && github.ref_name != 'master' && github.ref_name != 'latest'}}
+        id: meta
+        uses: docker/metadata-action@master
+        with: 
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+      - name: Extract Docker Metadata (for main)
+        if: ${{github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'latest'}}
+        id: metaMain
+        uses: docker/metadata-action@master
+        with: 
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          flavor: latest=true
+      - name: Build and push Docker image (from main)
+        if: ${{github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'latest'}}
+        uses: docker/build-push-action@master
+        with: 
+          context: .
+          push: true
+          tags: ${{ steps.metaMain.outputs.tags }}
+          labels: ${{ steps.metaMain.outputs.labels }}
+      - name: Build and push Docker image (from branch)
+        if: ${{github.ref_name != 'main' && github.ref_name != 'master' && github.ref_name != 'latest'}}
+        uses: docker/build-push-action@master
+        with: 
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+env: 
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}

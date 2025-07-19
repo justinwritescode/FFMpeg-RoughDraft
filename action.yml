@@ -11,6 +11,9 @@ inputs:
   SkipRoughDraftPS1: 
     required: false
     description: 'If set, will not process any files named *.RoughDraft.ps1'
+  InstallModule: 
+    required: false
+    description: A list of modules to be installed from the PowerShell gallery before scripts run.
   FFMpegInstallArgument: 
     required: false
     description: A list of installation arguments.
@@ -47,17 +50,20 @@ runs:
       id: RoughDraftAction
       shell: pwsh
       env: 
-        UserName: ${{inputs.UserName}}
         FFMpegInstallArgument: ${{inputs.FFMpegInstallArgument}}
-        SkipRoughDraftPS1: ${{inputs.SkipRoughDraftPS1}}
-        UserEmail: ${{inputs.UserEmail}}
         CommitMessage: ${{inputs.CommitMessage}}
         RoughDraftScript: ${{inputs.RoughDraftScript}}
+        UserName: ${{inputs.UserName}}
+        UserEmail: ${{inputs.UserEmail}}
+        SkipRoughDraftPS1: ${{inputs.SkipRoughDraftPS1}}
+        InstallModule: ${{inputs.InstallModule}}
       run: |
         $Parameters = @{}
         $Parameters.RoughDraftScript = ${env:RoughDraftScript}
         $Parameters.SkipRoughDraftPS1 = ${env:SkipRoughDraftPS1}
         $Parameters.SkipRoughDraftPS1 = $parameters.SkipRoughDraftPS1 -match 'true';
+        $Parameters.InstallModule = ${env:InstallModule}
+        $Parameters.InstallModule = $parameters.InstallModule -split ';' -replace '^[''"]' -replace  '[''"]$'
         $Parameters.FFMpegInstallArgument = ${env:FFMpegInstallArgument}
         $Parameters.FFMpegInstallArgument = $parameters.FFMpegInstallArgument -split ';' -replace '^[''"]' -replace  '[''"]$'
         $Parameters.CommitMessage = ${env:CommitMessage}
@@ -93,6 +99,10 @@ runs:
         [switch]
         $SkipRoughDraftPS1,
         
+        # A list of modules to be installed from the PowerShell gallery before scripts run.
+        [string[]]
+        $InstallModule = @("ugit"),
+        
         # A list of installation arguments.
         [string[]]
         $FFMpegInstallArgument,
@@ -110,36 +120,164 @@ runs:
         $UserName
         )
         
-        
+        if (-not $env:GITHUB_WORKSPACE) { throw "No GitHub workspace" }
+        $anyFilesChanged = $false
+        $moduleName = 'RoughDraft'
+        $actorInfo = $null
         
         "::group::Parameters" | Out-Host
         [PSCustomObject]$PSBoundParameters | Format-List | Out-Host
         "::endgroup::" | Out-Host
         
-        if ($env:GITHUB_ACTION_PATH) {
-            $RoughDraftModulePath = Join-Path $env:GITHUB_ACTION_PATH 'RoughDraft.psd1'
-            if (Test-path $RoughDraftModulePath) {
-                Import-Module $RoughDraftModulePath -Force -PassThru | Out-String
-            } else {
-                throw "RoughDraft not found"
-            }
-        } elseif (-not (Get-Module RoughDraft)) {    
-            throw "Action Path not found"
-        }
-        
-        if ($PSVersionTable.Platform -eq 'Unix') {
-            $ffMpegInPath =  $ExecutionContext.SessionState.InvokeCommand.GetCommand('ffmpeg', 'Application')
-            if (-not $ffMpegInPath -and $env:GITHUB_WORKFLOW) {
-                "::group::Installing FFMpeg" | Out-Host
-                sudo apt update | Out-Host
-                sudo apt install ffmpeg @FFMpegInstallArgument | Out-Host
+        function ImportActionModule {
+            #region -InstallModule
+            if ($InstallModule) {
+                "::group::Installing Modules" | Out-Host
+                foreach ($moduleToInstall in $InstallModule) {
+                    $moduleInWorkspace = Get-ChildItem -Path $env:GITHUB_WORKSPACE -Recurse -File |
+                        Where-Object Name -eq "$($moduleToInstall).psd1" |
+                        Where-Object { 
+                            $(Get-Content $_.FullName -Raw) -match 'ModuleVersion'
+                        }
+                    if (-not $moduleInWorkspace) {
+                        Install-Module $moduleToInstall -Scope CurrentUser -Force
+                        Import-Module $moduleToInstall -Force -PassThru | Out-Host
+                    }
+                }
                 "::endgroup::" | Out-Host
             }
+            #endregion -InstallModule
+        
+            if ($env:GITHUB_ACTION_PATH) {
+                $LocalModulePath = Join-Path $env:GITHUB_ACTION_PATH "$moduleName.psd1"
+                if (Test-path $LocalModulePath) {
+                    Import-Module $LocalModulePath -Force -PassThru | Out-String
+                } else {
+                    throw "Module '$moduleName' not found"
+                }
+            } elseif (-not (Get-Module $moduleName)) {    
+                throw "Module '$ModuleName' not found"
+            }
+        
+            "::notice title=ModuleLoaded::$ModuleName Loaded from Path - $($LocalModulePath)" | Out-Host
+            if ($env:GITHUB_STEP_SUMMARY) {
+                "# $($moduleName)" |
+                    Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+            }
         }
-        $anyFilesChanged = $false
-        $processScriptOutput = { process { 
+        function InitializeAction {
+            #region Custom 
+            if ($PSVersionTable.Platform -eq 'Unix') {
+                $ffMpegInPath =  $ExecutionContext.SessionState.InvokeCommand.GetCommand('ffmpeg', 'Application')
+                if (-not $ffMpegInPath -and $env:GITHUB_WORKFLOW) {
+                    "::group::Installing FFMpeg" | Out-Host
+                    sudo apt update | Out-Host
+                    sudo apt install ffmpeg @FFMpegInstallArgument | Out-Host
+                    "::endgroup::" | Out-Host
+                }
+            }
+            #endregion Custom
+        
+            # Configure git based on the $env:GITHUB_ACTOR
+            if (-not $UserName) { $UserName = $env:GITHUB_ACTOR }
+            if (-not $actorID)  { $actorID = $env:GITHUB_ACTOR_ID }
+            $actorInfo = Invoke-RestMethod -Uri "https://api.github.com/user/$actorID"
+            if (-not $UserEmail) { $UserEmail = "$UserName@noreply.github.com" }
+            git config --global user.email $UserEmail
+            git config --global user.name  $actorInfo.name
+        
+            # Pull down any changes
+            git pull | Out-Host
+        }
+        
+        function InvokeActionModule {
+            $myScriptStart = [DateTime]::Now
+            $myScript = $ExecutionContext.SessionState.PSVariable.Get("${ModuleName}Script").Value
+            if ($myScript) {
+                Invoke-Expression -Command $myScript |
+                    . ProcessOutput |
+                    Out-Host
+            }
+            $myScriptTook = [Datetime]::Now - $myScriptStart
+            $MyScriptFilesStart = [DateTime]::Now
+        
+            $myScriptList  = @()
+            $shouldSkip = $ExecutionContext.SessionState.PSVariable.Get("Skip${ModuleName}PS1").Value
+            if (-not $shouldSkip) {
+                Get-ChildItem -Recurse -Path $env:GITHUB_WORKSPACE |
+                    Where-Object Name -Match "\.$($moduleName)\.ps1$" |            
+                    ForEach-Object -Begin {
+                        if ($env:GITHUB_STEP_SUMMARY) {
+                            "## $ModuleName Scripts" |
+                                Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                        } 
+                    } -Process {
+                        $myScriptList += $_.FullName.Replace($env:GITHUB_WORKSPACE, '').TrimStart('/')
+                        $myScriptCount++
+                        $scriptFile = $_
+                        if ($env:GITHUB_STEP_SUMMARY) {
+                            "### $($scriptFile.Fullname)" |
+                                Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                        }            
+                        $scriptFileOutputs = . $scriptFile.FullName
+                        if ($env:GITHUB_STEP_SUMMARY) {
+                            "$(@($scriptFileOutputs).Length) Outputs" |                    
+                                Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                            "$(@($scriptFileOutputs).Length) Outputs" | Out-Host
+                        }
+                        $scriptFileOutputs |
+                            . ProcessOutput  | 
+                            Out-Host
+                    }
+            }
+            
+            $MyScriptFilesTook = [Datetime]::Now - $MyScriptFilesStart
+            $SummaryOfMyScripts = "$myScriptCount $moduleName scripts took $($MyScriptFilesTook.TotalSeconds) seconds" 
+            $SummaryOfMyScripts | 
+                Out-Host
+            if ($env:GITHUB_STEP_SUMMARY) {
+                $SummaryOfMyScripts | 
+                    Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+            }
+        }
+        
+        function PushActionOutput {
+            if ($CommitMessage -or $anyFilesChanged) {
+                if ($CommitMessage) {
+                    Get-ChildItem $env:GITHUB_WORKSPACE -Recurse |
+                        ForEach-Object {
+                            $gitStatusOutput = git status $_.Fullname -s
+                            if ($gitStatusOutput) {
+                                git add $_.Fullname
+                            }
+                        }
+            
+                    git commit -m $ExecutionContext.SessionState.InvokeCommand.ExpandString($CommitMessage)
+                }
+            
+                $checkDetached = git symbolic-ref -q HEAD
+                if (-not $LASTEXITCODE) {
+                    "::notice::Pushing Changes" | Out-Host
+                    git push
+                    "Git Push Output: $($gitPushed  | Out-String)"
+                } else {
+                    "::notice::Not pushing changes (on detached head)" | Out-Host
+                    $LASTEXITCODE = 0
+                    exit 0
+                }
+            }
+        }
+        
+        filter ProcessOutput {
             $out = $_
-            $outItem = Get-Item -Path $out -ErrorAction SilentlyContinue
+            $outItem = Get-Item -Path $out -ErrorAction Ignore
+            if (-not $outItem -and $out -is [string]) {
+                $out | Out-Host
+                if ($env:GITHUB_STEP_SUMMARY) {
+                    "> $out" | Out-File -Append -FilePath $env:GITHUB_STEP_SUMMARY
+                }
+                return
+            }
             $fullName, $shouldCommit = 
                 if ($out -is [IO.FileInfo]) {
                     $out.FullName, (git status $out.Fullname -s)
@@ -149,81 +287,21 @@ runs:
             if ($shouldCommit) {
                 git add $fullName
                 if ($out.Message) {
-                    git commit -m "$($out.Message)"
+                    git commit -m "$($out.Message)" | Out-Host
                 } elseif ($out.CommitMessage) {
-                    git commit -m "$($out.CommitMessage)"
+                    git commit -m "$($out.CommitMessage)" | Out-Host
+                }  elseif ($gitHubEvent.head_commit.message) {
+                    git commit -m "$($gitHubEvent.head_commit.message)" | Out-Host
                 }
                 $anyFilesChanged = $true
-            }
+            }    
             $out
-        } }
-        
-        "::notice title=ModuleLoaded::RoughDraft Loaded from Path - $($RoughDraftModulePath)" | Out-Host
-        
-        if (-not $UserName) { $UserName = $env:GITHUB_ACTOR }
-        if (-not $UserEmail) { $UserEmail = "$UserName@github.com" }
-        git config --global user.email $UserEmail
-        git config --global user.name  $UserName
-        
-        if (-not $env:GITHUB_WORKSPACE) { throw "No GitHub workspace" }
-        
-        git pull | Out-Host
-        
-        $roughDraftScriptStart = [DateTime]::Now
-        if ($RoughDraftScript) {
-            Invoke-Expression -Command $RoughDraftScript |
-                . $processScriptOutput |
-                Out-Host
         }
-        $roughDraftScriptTook = [Datetime]::Now - $roughDraftScriptStart
-        "::set-output name=RoughDraftScriptRuntime::$($roughDraftScriptTook.TotalMilliseconds)"   | Out-Host
         
-        $roughDraftPS1Start = [DateTime]::Now
-        $roughDraftPS1List  = @()
-        if (-not $SkipRoughDraftPS1) {
-            Get-ChildItem -Recurse -Path $env:GITHUB_WORKSPACE |
-                Where-Object Name -Match '\.RoughDraft\.ps1$' |
-                
-                ForEach-Object {
-                    $roughDraftPS1List += $_.FullName.Replace($env:GITHUB_WORKSPACE, '').TrimStart('/')
-                    $roughDraftPS1Count++
-                    "::notice title=Running::$($_.Fullname)" | Out-Host
-                    . $_.FullName |            
-                        . $processScriptOutput  | 
-                        Out-Host
-                }
-        }
-        $roughDraftPS1EndStart = [DateTime]::Now
-        $roughDraftPS1Took = [Datetime]::Now - $roughDraftPS1Start
-        "::set-output name=RoughDraftPS1Count::$($roughDraftPS1List.Length)"   | Out-Host
-        "::set-output name=RoughDraftPS1Files::$($roughDraftPS1List -join ';')"   | Out-Host
-        "::set-output name=RoughDraftPS1Runtime::$($roughDraftPS1Took.TotalMilliseconds)"   | Out-Host
-        if ($CommitMessage -or $anyFilesChanged) {
-            if ($CommitMessage) {
-                dir $env:GITHUB_WORKSPACE -Recurse |
-                    ForEach-Object {
-                        $gitStatusOutput = git status $_.Fullname -s
-                        if ($gitStatusOutput) {
-                            git add $_.Fullname
-                        }
-                    }
         
-                git commit -m $ExecutionContext.SessionState.InvokeCommand.ExpandString($CommitMessage)
-            }
-        
-            
-            
-        
-            $checkDetached = git symbolic-ref -q HEAD
-            if (-not $LASTEXITCODE) {
-                "::notice::Pushing Changes" | Out-Host
-                git push
-                "Git Push Output: $($gitPushed  | Out-String)"
-            } else {
-                "::notice::Not pushing changes (on detached head)" | Out-Host
-                $LASTEXITCODE = 0
-                exit 0
-            }
-        }
+        . ImportActionModule
+        . InitializeAction
+        . InvokeActionModule
+        . PushActionOutput
         } @Parameters
 
