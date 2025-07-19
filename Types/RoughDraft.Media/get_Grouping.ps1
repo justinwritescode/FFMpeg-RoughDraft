@@ -5,4 +5,4 @@
     Gets the Grouping Metadata, if present.
 #>
 param()
-return $this.'.Metadata'.Grouping -split '[\;/]'
+return @($this.'.Metadata'.Grouping -split '[\;/]') -as [string[]]
