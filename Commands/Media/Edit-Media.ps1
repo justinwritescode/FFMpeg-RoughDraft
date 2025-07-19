@@ -50,7 +50,7 @@
 
     # If provided, will use a specific pixel format for video and image output.  This maps to the -pix_fmt parameter in ffmpeg.
     [Parameter(ValueFromPipelineByPropertyName)]
-    [Alias('Pix_Fmt')]
+    [Alias('pix_fmt')]
     [string]
     $PixelFormat,
 
@@ -96,6 +96,16 @@
     [Parameter(Position=4, ValueFromPipelineByPropertyName)]
     [Timespan]
     $Duration,
+
+    # The number of frames to convert.
+    [Parameter(ValueFromPipelineByPropertyName)]
+    [int]
+    $FrameCount,
+
+    # If provided, will output a specified number of frames from the video
+    [Parameter(ValueFromPipelineByPropertyName)]
+    [Uint32]
+    $VideoFrameCount,
 
     # A series of video filters.  
     # The key is the name of the filter, and the value can either be the direct string value of the filter, or a hashtable containing the filter components.
@@ -241,7 +251,6 @@
         $ffmpegParams = @()
 
         if ($Codec) {
-
             $foundSeparator = $false
             $codecList = Get-FFMpeg -ListCodec
 
@@ -453,6 +462,19 @@
         if ($Duration) {
             $TimeFrame += '-t'
             $TimeFrame += "$($Duration.TotalSeconds)"
+        }
+
+        # If we have a frame count
+        if ($FrameCount -and $FrameCount -gt 0) {
+            # supply -frames:v
+            $TimeFrame += '-frames:v'
+            $TimeFrame += "$FrameCount"
+        }
+
+        # If we were provided a video frame count
+        if ($PSBoundParameters.VideoFrameCount) {
+            $timeFrame += "-vframes" # Use -vframes.
+            $timeFrame += "$VideoFrameCount"
         }
         #endregion Determine Timeframe
 

@@ -103,8 +103,14 @@
     $Duration,
 
     # The number of frames to convert.
+    [Parameter(ValueFromPipelineByPropertyName)]
     [int]
     $FrameCount,
+
+    # If provided, will output a specified number of frames from the video
+    [Parameter(ValueFromPipelineByPropertyName)]
+    [Uint32]
+    $VideoFrameCount,
 
     # If provided, will use an ffmpeg preset to encode.
     # This maps to the --preset parameter in ffmpeg.
@@ -128,11 +134,6 @@
     [Parameter(ValueFromPipelineByPropertyName)]
     [string]
     $VideoCodec,
-
-    # If provided, will output a specified number of frames from the video file
-    [Parameter(ValueFromPipelineByPropertyName)]
-    [Uint32]
-    $VideoFrameCount,
 
     # If provided, will use a specific pixel format for video and image output.  This maps to the -pix_fmt parameter in ffmpeg.
     [Parameter(ValueFromPipelineByPropertyName)]
