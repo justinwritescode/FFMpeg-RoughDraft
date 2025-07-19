@@ -181,7 +181,7 @@ There are currently 117 extensions:
 |[ColorHold](ColorHold-Extension.md)                              |ColorHold Extension                   |Edit-Media,Show-Media                         |
 |[Colorize](Colorize-Extension.md)                                |Colorize a video stream               |Edit-Media,Show-Media                         |
 |[ColorScope](ColorScope-Extension.md)                            |Colorscope extension                  |Edit-Media,Show-Media                         |
-|[ColorSource](ColorSource-Extension.md)                          |Generates a color                     |New-Media,Show-Media                          |
+|[ColorSource](ColorSource-Extension.md)                          |Generates a color                     |Show-Media,New-Media                          |
 |[Convolve](Convolve-Extension.md)                                |convolve                              |Join-Media                                    |
 |[Crop](Crop-Extension.md)                                        |Crop Extension                        |Send-Media,Edit-Media,Show-Media,Receive-Media|
 |[CropDetect](CropDetect-Extension.md)                            |Auto-detect the crop size.            |Get-Media                                     |
@@ -205,7 +205,7 @@ There are currently 117 extensions:
 |[Flanger](Flanger-Extension.md)                                  |Audio Flanger.                        |Edit-Media,Show-Media                         |
 |[FlipHorizontal](FlipHorizontal-Extension.md)                    |Flips video horizontally              |Edit-Media,Show-Media                         |
 |[FlipVertical](FlipVertical-Extension.md)                        |Flips video vertically                |Edit-Media,Show-Media                         |
-|[FrameBuffer](FrameBuffer-Extension.md)                          |FrameBuffer Extension                 |Send-Media,Show-Media,Receive-Media           |
+|[FrameBuffer](FrameBuffer-Extension.md)                          |FrameBuffer Extension                 |Send-Media,Show-Media,Receive-Media           
 |[FrameStep](FrameStep-Extension.md)                              |FrameStep Effect                      |Edit-Media,Show-Media                         |
 |[GdiGrab](GdiGrab-Extension.md)                                  |GDIGrab Extension                     |Send-Media,Show-Media,Receive-Media           |
 |[GifPalette](GifPalette-Extension.md)                            |Gif Palette Extension                 |Convert-Media                                 |
@@ -213,11 +213,11 @@ There are currently 117 extensions:
 |[Hue](Hue-Extension.md)                                          |Hue Extension                         |Edit-Media,Show-Media                         |
 |[Hysteresis](Hysteresis-Extension.md)                            |Hysteresis                            |Join-Media                                    |
 |[LagFun](LagFun-Extension.md)                                    |Slowly update darker pixels.          |Edit-Media,Show-Media                         |
-|[Life](Life-Extension.md)                                        |Generates life                        |New-Media,Show-Media                          |
+|[Life](Life-Extension.md)                                        |Generates life                        |Show-Media,New-Media                          |
 |[LimitPixel](LimitPixel-Extension.md)                            |Limits Pixel values                   |Edit-Media,Show-Media                         |
 |[ListFilters](ListFilters-Extension.md)                          |Lists filters                         |Get-FFMpeg                                    |
 |[ListProtocols](ListProtocols-Extension.md)                      |Lists protocols                       |Get-FFMpeg                                    |
-|[Mandelbrot](Mandelbrot-Extension.md)                            |Generates fractals                    |New-Media,Show-Media                          |
+|[Mandelbrot](Mandelbrot-Extension.md)                            |Generates fractals                    |Show-Media,New-Media                          |
 |[MedianPixel](MedianPixel-Extension.md)                          |Picks median pixels                   |Edit-Media,Show-Media                         |
 |[Mirror](Mirror-Extension.md)                                    |Mirror Extension                      |Edit-Media,Show-Media                         |
 |[MixAudio](MixAudio-Extension.md)                                |Mix Audio                             |Join-Media                                    |
@@ -264,7 +264,7 @@ There are currently 117 extensions:
 |[SuperFrequencyCut](SuperFrequencyCut-Extension.md)              |Cut super frequencies.                |Edit-Media,Show-Media                         |
 |[SwapRect](SwapRect-Extension.md)                                |swaprect                              |Edit-Media                                    |
 |[Tempo](Tempo-Extension.md)                                      |Adjust audio tempo.                   |Edit-Media,Show-Media                         |
-|[TestSource](TestSource-Extension.md)                            |Generates test sources                |New-Media,Show-Media                          |
+|[TestSource](TestSource-Extension.md)                            |Generates test sources                |Show-Media,New-Media                          |
 |[Tile](Tile-Extension.md)                                        |Tile Extension                        |Edit-Media                                    |
 |[TimeMix](TimeMix-Extension.md)                                  |Mix successive video frames.          |Edit-Media,Show-Media                         |
 |[Tremolo](Tremolo-Extension.md)                                  |Tremolo effect                        |Edit-Media,Show-Media                         |
