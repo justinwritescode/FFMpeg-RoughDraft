@@ -18,7 +18,6 @@ param(
 $MedianPixel,
 
 # If set, will pick median pixels from successive frames.  This will ignore -MediaPixelRadiusV.
-[Parameter(Mandatory)]
 [switch]
 $MedianPixelTimeBlend,
 
@@ -66,5 +65,5 @@ $filterArgs = @(
 '-vf'
 
 $FilterName = if ($MedianPixelTimeBlend) {"tmedian"} else {"median"}
-"`"$FilterName=$filterArgs`""
+"$FilterName=$filterArgs"
 
