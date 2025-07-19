@@ -159,9 +159,16 @@ This maps to the ffmpeg parameter -t.
 #### **FrameCount**
 The number of frames to convert.
 
-|Type     |Required|Position|PipelineInput|
-|---------|--------|--------|-------------|
-|`[Int32]`|false   |named   |false        |
+|Type     |Required|Position|PipelineInput        |
+|---------|--------|--------|---------------------|
+|`[Int32]`|false   |named   |true (ByPropertyName)|
+
+#### **VideoFrameCount**
+If provided, will output a specified number of frames from the video
+
+|Type      |Required|Position|PipelineInput        |
+|----------|--------|--------|---------------------|
+|`[UInt32]`|false   |named   |true (ByPropertyName)|
 
 #### **Preset**
 If provided, will use an ffmpeg preset to encode.
@@ -192,13 +199,6 @@ If provided, will re-encode the file with a given video codec.  This affects the
 |Type      |Required|Position|PipelineInput        |
 |----------|--------|--------|---------------------|
 |`[String]`|false   |named   |true (ByPropertyName)|
-
-#### **VideoFrameCount**
-If provided, will output a specified number of frames from the video file
-
-|Type      |Required|Position|PipelineInput        |
-|----------|--------|--------|---------------------|
-|`[UInt32]`|false   |named   |true (ByPropertyName)|
 
 #### **PixelFormat**
 If provided, will use a specific pixel format for video and image output.  This maps to the -pix_fmt parameter in ffmpeg.
@@ -246,5 +246,5 @@ If set, this will loop the input source any number of times.
 
 ### Syntax
 ```PowerShell
-Convert-Media [-InputPath] <String> [-OutputPath] <String> [-Codec <String>] [-FFMpegPath <String>] [-FrameRate <String>] [-CopyAudio] [-AudioCodec <String>] [-AudioFilter <String[]>] [-VideoFilter <String[]>] [-AudioQuality <Int32>] [-AudioBitrate <String>] [-AudioStreamIndex <Int32>] [-AudioChannelCount <UInt32>] [-MetaData <IDictionary>] [[-Start] <TimeSpan>] [[-End] <TimeSpan>] [[-Duration] <TimeSpan>] [-FrameCount <Int32>] [-Preset <String>] [-Tune <String>] [-VideoQuality <Int32>] [-VideoCodec <String>] [-VideoFrameCount <UInt32>] [-PixelFormat <String>] [-AsJob] [-FFMpegArgument <String[]>] [-Loop] [-LoopCount <Int32>] [<CommonParameters>]
+Convert-Media [-InputPath] <String> [-OutputPath] <String> [-Codec <String>] [-FFMpegPath <String>] [-FrameRate <String>] [-CopyAudio] [-AudioCodec <String>] [-AudioFilter <String[]>] [-VideoFilter <String[]>] [-AudioQuality <Int32>] [-AudioBitrate <String>] [-AudioStreamIndex <Int32>] [-AudioChannelCount <UInt32>] [-MetaData <IDictionary>] [[-Start] <TimeSpan>] [[-End] <TimeSpan>] [[-Duration] <TimeSpan>] [-FrameCount <Int32>] [-VideoFrameCount <UInt32>] [-Preset <String>] [-Tune <String>] [-VideoQuality <Int32>] [-VideoCodec <String>] [-PixelFormat <String>] [-AsJob] [-FFMpegArgument <String[]>] [-Loop] [-LoopCount <Int32>] [<CommonParameters>]
 ```
