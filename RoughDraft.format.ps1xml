@@ -18,6 +18,8 @@
           </TableColumnHeader>
           <TableColumnHeader>
           </TableColumnHeader>
+          <TableColumnHeader>
+          </TableColumnHeader>
         </TableHeaders>
         <TableRowEntries>
           <TableRowEntry>
@@ -41,6 +43,9 @@
             }
         }
     </ScriptBlock>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Duration</PropertyName>
               </TableColumnItem>
               <TableColumnItem>
                 <PropertyName>MediaType</PropertyName>
