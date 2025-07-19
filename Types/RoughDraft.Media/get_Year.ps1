@@ -12,9 +12,9 @@ $yearInfo = if ($this.'.Metadata'.Year) {
 }
 
 if ($yearInfo -match '^\d{4}$') {
-    return ($yearInfo -as [int])    
+    return ($yearInfo -as [int])
 } elseif ($yearInfo -as [DateTime]) {
-    return ($yearInfo -as [datetime]).Year
+    return ([int]($yearInfo -as [datetime]).Year)
 }
 
 
