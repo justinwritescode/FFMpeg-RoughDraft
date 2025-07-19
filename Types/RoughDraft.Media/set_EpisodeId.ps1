@@ -7,10 +7,10 @@
     EpisodeID is stored within the ID3 tag `TVEN`.
 #>
 param()
-$propertyToSet = @{TVEN="$args"}
+$propertyToSet = @{"episode_id"="$args"}
 if (-not $this.'.Metadata') {
     $this.'.Metadata' = [Ordered]@{}
 }
-$this.'.Metadata'.EpisodeID = $propertyToSet.TVEN
+$this.'.Metadata'.EpisodeID = $propertyToSet.episode_id
 Set-Media -InputPath $this.InputPath -Property $propertyToSet
 
