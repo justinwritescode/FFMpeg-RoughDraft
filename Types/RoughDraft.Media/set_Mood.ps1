@@ -7,10 +7,10 @@
     Mood is stored within the ID3 tag `WM/MOOD`.
 #>
 param()
-$propertyToSet = @{"WM/MOOD"="$args"}
+$propertyToSet = @{"id3v2_priv.WM/MOOD"="$args";mood="$args"}
 if (-not $this.'.Metadata') {
     $this.'.Metadata' = [Ordered]@{}
 }
-$this.'.Metadata'.Mood = $propertyToSet."WM/MOOD"
+$this.'.Metadata'.Mood = $propertyToSet."id3v2_priv.WM/MOOD"
 Set-Media -InputPath $this.InputPath -Property $propertyToSet
 
