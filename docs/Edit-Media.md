@@ -73,7 +73,7 @@ If provided, will use a specific pixel format for video and image output.  This 
 
 |Type      |Required|Position|PipelineInput        |Aliases|
 |----------|--------|--------|---------------------|-------|
-|`[String]`|false   |named   |true (ByPropertyName)|Pix_Fmt|
+|`[String]`|false   |named   |true (ByPropertyName)|pix_fmt|
 
 #### **Preset**
 If provided, will use an ffmpeg preset to encode.
@@ -130,6 +130,20 @@ This maps to the ffmpeg parameter -t.
 |Type        |Required|Position|PipelineInput        |
 |------------|--------|--------|---------------------|
 |`[TimeSpan]`|false   |5       |true (ByPropertyName)|
+
+#### **FrameCount**
+The number of frames to convert.
+
+|Type     |Required|Position|PipelineInput        |
+|---------|--------|--------|---------------------|
+|`[Int32]`|false   |named   |true (ByPropertyName)|
+
+#### **VideoFrameCount**
+If provided, will output a specified number of frames from the video
+
+|Type      |Required|Position|PipelineInput        |
+|----------|--------|--------|---------------------|
+|`[UInt32]`|false   |named   |true (ByPropertyName)|
 
 #### **VideoFilter**
 A series of video filters.  
@@ -218,5 +232,5 @@ Using Edit-Media in a fluent pipeline will allow you to easily control the order
 
 ### Syntax
 ```PowerShell
-Edit-Media [-InputPath] <String[]> [[-OutputPath] <String>] [-OutputMap <IDictionary>] [-Codec <String>] [-FFMpegPath <String>] [-PixelFormat <String>] [-Preset <String>] [-Tune <String>] [-MetaData <IDictionary>] [[-Start] <TimeSpan>] [[-End] <TimeSpan>] [-Offset <TimeSpan>] [[-Duration] <TimeSpan>] [-VideoFilter <IDictionary>] [-AudioFilter <IDictionary>] [-ComplexFilter <IDictionary[]>] [-ThreadCount <String>] [-FFMpegArgument <String[]>] [-AsJob] [-ThrottleLimit <Int32>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
+Edit-Media [-InputPath] <String[]> [[-OutputPath] <String>] [-OutputMap <IDictionary>] [-Codec <String>] [-FFMpegPath <String>] [-PixelFormat <String>] [-Preset <String>] [-Tune <String>] [-MetaData <IDictionary>] [[-Start] <TimeSpan>] [[-End] <TimeSpan>] [-Offset <TimeSpan>] [[-Duration] <TimeSpan>] [-FrameCount <Int32>] [-VideoFrameCount <UInt32>] [-VideoFilter <IDictionary>] [-AudioFilter <IDictionary>] [-ComplexFilter <IDictionary[]>] [-ThreadCount <String>] [-FFMpegArgument <String[]>] [-AsJob] [-ThrottleLimit <Int32>] [-Force] [-WhatIf] [-Confirm] [<CommonParameters>]
 ```
