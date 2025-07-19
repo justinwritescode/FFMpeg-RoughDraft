@@ -7,7 +7,7 @@
 param()
 if ($this.'.Metadata'.EpisodeID) {
     return $this.'.Metadata'.EpisodeID
-} elseif ($this.'.Metadata'.TVEN) {
-    return $this.'.Metadata'.TVEN
+} elseif ($this.'.Metadata'.episode_id) {
+    return $this.'.Metadata'.episode_id
 }
 
