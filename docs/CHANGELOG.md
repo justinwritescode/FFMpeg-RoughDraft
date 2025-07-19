@@ -1,4 +1,115 @@
-## 0.4:
+> Like It? [Star It](https://github.com/StartAutomating/RoughDraft)
+> Love It? [Support It](https://github.com/sponsors/StartAutomating)
+
+
+## 0.4.1
+
+* RoughDraft in Docker
+  * Added Dockerfile ( #251 )
+  * Publishing to https://ghcr.io/startautomating/roughdraft ( #252 )
+    * `Container.init.ps1` initializes the container ( #277 )
+    * `Container.start.ps1` is the entry point ( #278 )
+    * `Container.stop.ps1` is the exit point ( #279 )
+  * RoughDraft Docker on Kali ( #311 )
+
+* Massive Metadata improvements!
+  * Get-Media now stores Metadata within '.Metadata' ( #224 )
+  * Media Formatting ( #30 )
+  * Gettable / Settable properties on every `Get-Media` result:
+    * RoughDraft.Media.AspectRatio ( #217 )
+    * RoughDraft.Media.PixelFormat ( #218 )
+    * RoughDraft.Media.Video/AudioBitrate ( #216, #219 )
+    * RoughDraft.Media.FilePath/FileName ( #220, #221 )
+    * RoughDraft.Media.get_MediaType ( #212 )
+  * Media metadata can be set with script properties
+    * RoughDraft.Media.get/set_Artist ( #249 )
+    * RoughDraft.Media.get/set_Date ( #271 )
+    * RoughDraft.Media.get/set_Year ( #248 )
+    * RoughDraft.Media.get/set_Track ( #247 )
+    * RoughDraft.Media.get/set_Synopsis ( #246 )
+    * RoughDraft.Media.get/set_Subtitle ( #245 )
+    * RoughDraft.Media.get/set_Publisher/Show ( #243, #244 )
+    * RoughDraft.Media.get/set_Network/Producer ( #241, #242 )
+    * RoughDraft.Media.get/set_Mood ( #240 )
+    * RoughDraft.Media.get/set_Location ( Fixes #260 )
+    * RoughDraft.Media.get/set_Lyric ( #239 )
+    * RoughDraft.Media.get/set_InitialKey ( #238 )
+    * RoughDraft.Media.get/set_Genre/Grouping ( #236, #237 )
+    * RoughDraft.Media.get/set_EpisodeId ( #235 )
+    * RoughDraft.Media.get/set_Disc ( #234 )
+    * RoughDraft.Media.get/set_Description ( #233 )
+    * RoughDraft.Media.get/set_CreationTime ( #232 )
+    * RoughDraft.Media.get/set_Comment/Composer ( #229, #230 )
+    * RoughDraft.Media.get/set_Copyright ( #231 )
+    * RoughDraft.Media.get/set_Comment ( #229 )
+    * RoughDraft.Media.get/set_BPM ( #228 )
+    * RoughDraft.Media.get/set_Album/AlbumArtist ( #226, #227 )
+    * RoughDraft.Media.get/set_Title ( #225 )
+
+* Edit-Media -Offset ( #299 )
+* Convert/Edit/New-Media -FrameCount (#303)
+
+* New Commands:
+  * Repair-Media ( #208 )
+  * Mount-RoughDraft ( #288 )
+  * Dismount-RoughDraft ( #289 )
+
+* New Extensions:
+  * ChromaHold ( #190 )
+  * Crossfade (#18)
+  * ExtractSubtitle (#186)
+  * FixPlaylistPath ( #209 )
+  * GdiGrab ( #313 )
+  * GifPalette (#71)  
+  * NoLogo (#17)
+  * OffsetAudio ( #297 )
+  * OffsetVideo ( #298 )
+  * PseudoColor ( #305 )  
+  * ShufflePixels ( #304 )
+  * ShufflePlanes ( #306 )
+  * SplitEqually ( #197 )  
+  * SwapRect ( #191 )
+  * Vibrance ( #192 )
+  
+* Fixes / Improvements
+  * Fixing -VideoCodec (#189)
+  * YouTube downloader
+    * Swapping YouTube Downloader to `yt-dlp` ( #196 )
+    * Adding additional options (#257)
+  * Join-Media should not always transcode ( #195 )
+  * Quoting Fixes
+    * Set-Media quoting ( #222 )
+    * Set-Media -AlbumArt quoting ( #255 )
+    * Mirror Extension Overquoting ( #301 )
+    * Pixelate Extension Overquoting ( #300 )
+    * Rotate filter quoting fix ( #259 )
+  * Get-Media -VolumeLevel ( #254 )
+  * Edit-Media removing default -PixelFormat ( Fixes #302 )
+  * Removing pixel format from visualizers ( #312 )
+  * Workflow fixes
+    * RoughDraft PublishTestResults workflow fix ( #310 )
+  
+* Module Features:
+  * Mounting `RoughDraft:` ( #201 )
+  * Exporting `$RoughDraft` ( #202 )
+* Organization (#203, #204, #205, #206)
+  * Moving Build definitions into /Build ( #204 )
+  * Moving Functions into /Commands ( #205 )
+  * Moving Formatting and Types into /Types (#206)
+* Community Standards
+  * Added `CODE_OF_CONDUCT.md` (#293)
+  * Added `CONTRIBUTING.md` (#294)
+  * Added `SECURITY.md` (#295)
+* Action Improvements ( #282, #283, #284 )
+  * RoughDraft action no longer uses set-output ( #281 )
+  * RoughDraft action summarization ( #282 )
+  * RoughDraft action refactored into internal functions ( #283 )
+  * Using actorID in checkins (#284)
+  * Supporting -InstallModule (#285)
+
+---
+
+## 0.4
 
 * Enabled Sponsorship (please show your support) (#185)
 * Audio Visualizations now force output of video (#176)
@@ -11,62 +122,63 @@
 
 ---
 
-## 0.3.10:
+## 0.3.10
 
-* Fixing -Resize (Fixes #179)
+* Fixing -Resize (#179)
 * Explaining Expressions
-  * AudioExpression Documentation Improved (Fixes #180)
-  * Scale Documentation Improved (Fixes #181)
+  * AudioExpression Documentation Improved (#180)
+  * Scale Documentation Improved (#181)
 
 ---
 
-## 0.3.9:
+## 0.3.9
 
 * New Extensions:
-  * ColorExpression ( Fixes #172 )
-  * MixVideo ( Fixes #171 )
+  * ColorExpression ( #172 )
+  * MixVideo ( #171 )
 * Extension Updates:
-  * BlendFrame now supports by Join-Media (Fixes #173)
-* All Valid -Media Commands now support -FFMpegArgument (Fixes #75)
+  * BlendFrame now supports by Join-Media (#173)
+* All Valid -Media Commands now support -FFMpegArgument (#75)
 * Better Jobs Support
-  * Join-Media and New-Media now support -AsJob (Fixes #174)
-  * Job commands now support -ThrottleLimit (Fixes #175)
+  * Join-Media and New-Media now support -AsJob (#174)
+  * Job commands now support -ThrottleLimit (#175)
 
 ---
 
-## 0.3.8:
+## 0.3.8
 
 * New Extensions:
-  * AudioFrequencyExpression (Fixes #158)
-  * Erosion (Fixes #165)
-  * FiniteEqualizer (Fixes #164)
-  * Scale (Fixes #162)
-  * Temp (Fixes #161)
-  * PitchFactor (Fixes #157)
-  * ZoomPan (Fixes #159)
+  * AudioFrequencyExpression (#158)
+  * Erosion (#165)
+  * FiniteEqualizer (#164)
+  * Scale (#162)
+  * Temp (#161)
+  * PitchFactor (#157)
+  * ZoomPan (#159)
 
 ---
 
-## 0.3.7:
+## 0.3.7
 * New Extensions:
-  * AudioCrusher (Fixes #148)
-  * Chorus (Fixes #20)
-  * Convolve (Fixes #150)
-  * Deconvolve (Fixes #151)
-  * Hysteresis (Fixes #147)
-  * MixAudio (Fixes #16)
-  * Overlay (Fixes #145)
-  * ShowFrequency (Fixes #146)
+  * AudioCrusher (#148)
+  * Chorus (#20)
+  * Convolve (#150)
+  * Deconvolve (#151)
+  * Hysteresis (#147)
+  * MixAudio (#16)
+  * Overlay (#145)
+  * ShowFrequency (#146)
 * Join-Media now has -ThreadCount, -Preset, -Tune, and -FFMpegArgument (re #75, #140, #82)
-* ffmpeg, ffprobe, and ffplay are now aliased (Fixes #80)
+* ffmpeg, ffprobe, and ffplay are now aliased (#80)
 * Extension Improvements:
-  * YouTubeDL Extension (Fixes #134)
-* Fixing Use-FFProbe (Fixes #144)
-* Removed ConvertTo-Waveform (Fixes #50)
+  * YouTubeDL Extension (#134)
+* Fixing Use-FFProbe (#144)
+* Removed ConvertTo-Waveform (#50)
 
 ---
 
-## 0.3.6:
+## 0.3.6
+
 * Adding Visualization Extensions:
   * ShowSpectrum
   * ShowWaveform
@@ -78,27 +190,29 @@
 ---
 
 
-## 0.3.5:
+## 0.3.5
+
 * New Extensions:
-  * AudioExpression!!! (Fixes #22)
-  * BilateralSmooth (Fixes #117)
-  * Colorize (Fixes #120)
-  * FillBorder (Fixes #105)
-  * FrameStep (Fixes #113)
-  * Pulsator (Fixes #104)  
-  * SubFrequencyCut (Fixes #123)
-  * SuperFrequencyCut (Fixes #124)  
-  * VideoExpression!!! (Fixes #116)  
-* -Media commands now use Use-FFMpeg (Fixes #106)
-* Use-FFMpeg:  Improved error handling (Fixes #108)
+  * AudioExpression!!! (#22)
+  * BilateralSmooth (#117)
+  * Colorize (#120)
+  * FillBorder (#105)
+  * FrameStep (#113)
+  * Pulsator (#104)  
+  * SubFrequencyCut (#123)
+  * SuperFrequencyCut (#124)  
+  * VideoExpression!!! (#116)  
+* -Media commands now use Use-FFMpeg (#106)
+* Use-FFMpeg:  Improved error handling (#108)
 * Show-Media:
-  * InputPath is now optional (Fixes #107)
-  * Allowing multiple audio filters (Fixes #109)
-* Auto-generating docs (Fixes #122)
+  * InputPath is now optional (#107)
+  * Allowing multiple audio filters (#109)
+* Auto-generating docs (#122)
 
 ---
 
-## 0.3.4:
+## 0.3.4
+
 * Adding Flanger Extension (#100)
 * Show-Media:
   * Fixing looping behavior (#102)
@@ -111,9 +225,10 @@
 
 ---
         
-## 0.3.3:
+## 0.3.3
+
 * New Extensions:
-  * Adding Exposure Extension (#87)      
+  * Adding Exposure Extension (#87)
   * Adding FlipVertical Extension (#91)
   * Adding FlipHorizontal Extension (#90)
   * Adding LimitPixel Extension (#93)
@@ -127,7 +242,8 @@
 
 ---
 
-## 0.3.2:
+## 0.3.2
+
 * Updating RoughDraft Tests (adding test for image->video, re #83)
 * Convert-Media:  Adding .EXAMPLE for Image Conversion (#83)
 * Adding ColorScope Extension (#79)
@@ -140,7 +256,8 @@
 
 ---
 
-## 0.3.1:
+## 0.3.1
+
 * Adding Subtitler Extension (#73)
 * Show-Media:  Safeguarding progress output (Fixing #76)
 * Edit-Media:  -Codec is no longer positionally bound.
@@ -152,7 +269,8 @@
 
 ---
 
-## 0.3:
+## 0.3
+
 * Adding LagFun Extension (#69)
 * Get-Media:  Returning at the beginning of end if -AsJob was passed
 * Adding ColorContrast Extension (#68)
@@ -165,7 +283,8 @@
 
 ---
 
-## 0.2.9:
+## 0.2.9
+
 * Adding AmplifyPixel Extension (#61)
 * Adding MedianPixel Extension (#59)
 * Updating GitHub Jobs/Steps Defintions
@@ -193,7 +312,8 @@
 
 ---
 
-## 0.2.8:
+## 0.2.8
+
 * New Extensions:
   * Adding ListProtocols Extension (#38)
   * Initial FrameBuffer Extension (#40)
@@ -208,7 +328,8 @@
 
 ---
 
-## 0.2.7:
+## 0.2.7
+
 * New Extensions:
   * DirectShow (#33)
   * VideoForLinux (#34)
@@ -243,18 +364,22 @@
 ## 0.2.4
 * New Command: Split-Media
 * New Extension: NoAudio (for Split-Media)
+
 ---
-## 0.2.3:
+
+## 0.2.3
 * New command: Show-Media (#8)
 * Bugfix: Playlist extension no longer adds -Encoding (#13)
 * New Extension:  Sierpinksi fractal (#14)
 
 ---
 
-## 0.2.2:
+## 0.2.2
+
 * Enhancing support for Progress Bars (Fixing #3)
 * Making Join-Media extensible (Fixing #4)
 * New Extensions:
+
 |Extension   |Commands   |
 |------------|-----------|
 |DataScope   |Edit-Media |
@@ -268,7 +393,8 @@
 
 ---
 
-## 0.2.1:
+## 0.2.1
+
 * Adding Mandelbrot Extension (for New-Media)
 * Making Get-FFMpeg extensible
 * Making -Codecs/-ListCaptureDevice extensions for Get-FFMpeg
@@ -277,7 +403,8 @@
 
 ---
 
-## 0.2:
+## 0.2
+
 Publishing code on GitHub
 Refactoring module with an emphasis on extensibility
 Added initial GitHub action
