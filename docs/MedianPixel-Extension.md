@@ -32,7 +32,7 @@ If set, will pick median pixels from successive frames.  This will ignore -Media
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[Switch]`|true    |named   |false        |
+|`[Switch]`|false   |named   |false        |
 
 #### **MedianPixelRadius**
 Set horizontal radius size. Default value is 1. Allowed range is integer from 1 to 127.
@@ -71,5 +71,5 @@ while 0 will pick minimum values and 1 maximum values.
 
 ### Syntax
 ```PowerShell
-Extension/MedianPixel.RoughDraft.Extension.ps1 -MedianPixel -MedianPixelTimeBlend [[-MedianPixelRadius] <Int32>] [[-MedianPixelPlanes] <String>] [[-MedianPixelRadiusV] <Int32>] [[-MedianPixelPercentile] <Double>] [<CommonParameters>]
+Extension/MedianPixel.RoughDraft.Extension.ps1 -MedianPixel [-MedianPixelTimeBlend] [[-MedianPixelRadius] <Int32>] [[-MedianPixelPlanes] <String>] [[-MedianPixelRadiusV] <Int32>] [[-MedianPixelPercentile] <Double>] [<CommonParameters>]
 ```
