@@ -1,4 +1,4 @@
-Write-FormatView -TypeName RoughDraft.Media -Property FileName, FileSize, MediaType, CodecTypes -VirtualProperty @{
+Write-FormatView -TypeName RoughDraft.Media -Property FileName, FileSize, Duration, MediaType, CodecTypes -VirtualProperty @{
     FileSize = {
         if ($_.FileSize) {
             if ($_.FileSize / 1gb -eq 1) {
