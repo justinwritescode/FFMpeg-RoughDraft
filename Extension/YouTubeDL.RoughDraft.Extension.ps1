@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Youtube Downloader
+    Media Downloader
 .DESCRIPTION
-    Extends Get-Media to enable the downloading of videos from YouTube and other sources, using YouTubeDL
+    Extends Get-Media to enable the downloading of videos from YouTube and other sources, using YT-DLP
 .LINK
     https://github.com/yt-dlp/yt-dlp/
 #>
@@ -10,16 +10,17 @@
 [ComponentModel.Inheritance("NotInherited")] # that is not inherited (this is the default).
 param(
 [Parameter(Mandatory)]
-[Alias('YouTubeURI')]
+[Alias('YouTubeURI','YouTubeUrl','MediaUri')]
 [uri]
-$YouTubeURL,
+$MediaUrl,
 
 # The YouTubeDL Output File.  See [documentation](https://github.com/ytdl-org/youtube-dl/blob/master/README.md#output-template)
 [Alias('YouTubeOutputFormat')]
 [string]
 $YouTubeOutputFile,
 
-# If set, will force a download of the latest YouTubeDL (even if one is already found).  It will be placed in $home/.RoughDraft/.
+# If set, will force a download of the latest YouTubeDLP (even if one is already found).  It will be placed in $home/.RoughDraft/.
+[Alias('DownloadLastestYouTubeDLP','DownloadLatestYTDLP')]
 [switch]
 $DownloadLatestYouTubeDL,
 
@@ -97,16 +98,17 @@ $AllYouTubeDLArgs  = @(
 )
 
 if ($YouTubeDownloadArgumentList -like '--json' -or $YouTubeDownloadInformation) {
-    @(& $YouTubeDLPath $YouTubeURL @AllYouTubeDLArgs) -join [Environment]::NewLine | ConvertFrom-Json
+    @(& $YouTubeDLPath $MediaUrl @AllYouTubeDLArgs) -join [Environment]::NewLine | ConvertFrom-Json
 }
 elseif ($YouTubeDownloadArgumentList) {
     $AllYouTubeDLArgs += $YouTubeDownloadArgumentList
-    @(& $YouTubeDLPath $YouTubeURL @AllYouTubeDLArgs)
+    @(& $YouTubeDLPath $MediaUrl @AllYouTubeDLArgs)
 }
 else {
     $YouTubeDestinations = @()
     $progId = Get-Random
-    & $YouTubeDLPath $YouTubeURL @AllYouTubeDLArgs *>&1 |
+    $addingMetadataPattern = '^\[metadata\] adding metadata to\s+"'
+    & $YouTubeDLPath $MediaUrl @AllYouTubeDLArgs *>&1 |
         ForEach-Object {
             
             $outLine  = "$_"
@@ -116,22 +118,25 @@ else {
                 return
             }
             if ($outLine-match '^\[download\]\s+(?<p>[\d\.]+)+%') {
-                Write-Progress "Downloading" " $youTubeURL" -PercentComplete $matches.p -Id $progId
+                Write-Progress "Downloading" "$MediaUrl " -PercentComplete $matches.p -Id $progId
             } elseif ($outLine -match '^\[download\] Destination:') {
-                $YouTubeDestinations += $outLine -replace '^\[download\] Destination:\s+'
+                $YouTubeDestinations += ($outLine -replace '^\[download\] Destination:\s+').Trim()
             }
 
             if ($outline -match 'has already been downloaded\s{0,}$') {
-                $YouTubeDestinations += $outline -replace 'has already been downloaded\s{0,}$' -replace '^\[download\]\s+'
+                $YouTubeDestinations += ($outline -replace 'has already been downloaded\s{0,}$' -replace '^\[download\]\s+').Trim()
+            }
+
+            
+            if ($outline -match $addingMetadataPattern) {
+                $YouTubeDestinations += ($outLine -replace $addingMetadataPattern).TrimEnd('"')
             }
             
         } -End {
-            Write-Progress "Downloading" " $youTubeURL" -Completed -Id $progId
+            Write-Progress "Downloading" "$MediaUrl" -Completed -Id $progId
         }
 
-    foreach ($YouTubeDestination in $YouTubeDestinations) {
-        if (Test-Path $YouTubeDestination) {
-            Get-Item $YouTubeDestination
-        }
+    foreach ($YouTubeDestination in $YouTubeDestinations | Select-Object -Unique ) {
+        Get-Item -LiteralPath $YouTubeDestination -ErrorAction Ignore
     }    
 }
