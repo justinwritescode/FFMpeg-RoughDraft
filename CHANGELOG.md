@@ -1,6 +1,18 @@
 ﻿> Like It? [Star It](https://github.com/StartAutomating/RoughDraft)
 > Love It? [Support It](https://github.com/sponsors/StartAutomating)
 
+## 0.4.2
+
+* Improvements to Media Downloader (#318)
+  * Now outputting the file
+  * Renaming -YouTubeUrl to -MediaUrl (keeping alias)
+* New Extensions:
+  * XBR (#319)
+  * ColorCurves (#320)
+  * Histogram Equalizer (#321)
+  * SelectiveColor (#324)
+
+---
 
 ## 0.4.1
 
