@@ -155,7 +155,7 @@ Get-FFMpeg -FilterName
 ## RoughDraft Extensions
 
 RoughDraft uses Extensions to make complex media scenarios easier work with.
-There are currently 120 extensions:
+There are currently 121 extensions:
 
 
 |DisplayName                                                           |Synopsis                              |Extends                                       |
@@ -163,13 +163,13 @@ There are currently 120 extensions:
 |[AlbumArt](docs/AlbumArt-Extension.md)                                |Sets album artwork                    |Set-Media                                     |
 |[AmplifyPixel](docs/AmplifyPixel-Extension.md)                        |AmplifyPixel extension                |Show-Media,Edit-Media                         |
 |[AudioCrusher](docs/AudioCrusher-Extension.md)                        |Audio Crusher                         |Show-Media,Edit-Media                         |
-|[AudioExpression](docs/AudioExpression-Extension.md)                  |Evaluates Audio Expressions           |Edit-Media,New-Media,Show-Media               |
+|[AudioExpression](docs/AudioExpression-Extension.md)                  |Evaluates Audio Expressions           |Edit-Media,Show-Media,New-Media               |
 |[AudioFrequencyExpression](docs/AudioFrequencyExpression-Extension.md)|Apply expressions to audio frequencies|Show-Media,Edit-Media                         |
 |[AudioGain](docs/AudioGain-Extension.md)                              |Increases audio volume                |Show-Media,Edit-Media                         |
 |[BilateralSmooth](docs/BilateralSmooth-Extension.md)                  |Bilateral Smooth                      |Show-Media,Edit-Media                         |
 |[BlackDetect](docs/BlackDetect-Extension.md)                          |Detect black periods in a video.      |Get-Media                                     |
 |[BlackFrame](docs/BlackFrame-Extension.md)                            |Detects black frames.                 |Get-Media                                     |
-|[BlendFrame](docs/BlendFrame-Extension.md)                            |BlendFrame Extension                  |Edit-Media,Join-Media,Show-Media              |
+|[BlendFrame](docs/BlendFrame-Extension.md)                            |BlendFrame Extension                  |Edit-Media,Show-Media,Join-Media              |
 |[BlendVideo](docs/BlendVideo-Extension.md)                            |BlendVideo Extension                  |Join-Media                                    |
 |[Blur](docs/Blur-Extension.md)                                        |Blurs Video                           |Show-Media,Edit-Media                         |
 |[CaptureDevice](docs/CaptureDevice-Extension.md)                      |Gets capture devices                  |Get-FFMpeg                                    |
@@ -178,13 +178,13 @@ There are currently 120 extensions:
 |[Codecs](docs/Codecs-Extension.md)                                    |Lists codecs                          |Get-FFMpeg                                    |
 |[ColorContrast](docs/ColorContrast-Extension.md)                      |ColorContrast Extension               |Show-Media,Edit-Media                         |
 |[ColorCurve](docs/ColorCurve-Extension.md)                            |ColorCurve Extension                  |Show-Media,Edit-Media                         |
-|[ColorExpression](docs/ColorExpression-Extension.md)                  |Color Expression                      |Edit-Media,Join-Media,Show-Media              |
+|[ColorExpression](docs/ColorExpression-Extension.md)                  |Color Expression                      |Edit-Media,Show-Media,Join-Media              |
 |[ColorHold](docs/ColorHold-Extension.md)                              |ColorHold Extension                   |Show-Media,Edit-Media                         |
 |[Colorize](docs/Colorize-Extension.md)                                |Colorize a video stream               |Show-Media,Edit-Media                         |
 |[ColorScope](docs/ColorScope-Extension.md)                            |Colorscope extension                  |Show-Media,Edit-Media                         |
-|[ColorSource](docs/ColorSource-Extension.md)                          |Generates a color                     |New-Media,Show-Media                          |
+|[ColorSource](docs/ColorSource-Extension.md)                          |Generates a color                     |Show-Media,New-Media                          |
 |[Convolve](docs/Convolve-Extension.md)                                |convolve                              |Join-Media                                    |
-|[Crop](docs/Crop-Extension.md)                                        |Crop Extension                        |Send-Media,Receive-Media,Edit-Media,Show-Media|
+|[Crop](docs/Crop-Extension.md)                                        |Crop Extension                        |Send-Media,Edit-Media,Receive-Media,Show-Media|
 |[CropDetect](docs/CropDetect-Extension.md)                            |Auto-detect the crop size.            |Get-Media                                     |
 |[CrossFade](docs/CrossFade-Extension.md)                              |acrossfade                            |Join-Media                                    |
 |[DataScope](docs/DataScope-Extension.md)                              |Datascope effect                      |Edit-Media                                    |
@@ -215,11 +215,11 @@ There are currently 120 extensions:
 |[Hue](docs/Hue-Extension.md)                                          |Hue Extension                         |Show-Media,Edit-Media                         |
 |[Hysteresis](docs/Hysteresis-Extension.md)                            |Hysteresis                            |Join-Media                                    |
 |[LagFun](docs/LagFun-Extension.md)                                    |Slowly update darker pixels.          |Show-Media,Edit-Media                         |
-|[Life](docs/Life-Extension.md)                                        |Generates life                        |New-Media,Show-Media                          |
+|[Life](docs/Life-Extension.md)                                        |Generates life                        |Show-Media,New-Media                          |
 |[LimitPixel](docs/LimitPixel-Extension.md)                            |Limits Pixel values                   |Show-Media,Edit-Media                         |
 |[ListFilters](docs/ListFilters-Extension.md)                          |Lists filters                         |Get-FFMpeg                                    |
 |[ListProtocols](docs/ListProtocols-Extension.md)                      |Lists protocols                       |Get-FFMpeg                                    |
-|[Mandelbrot](docs/Mandelbrot-Extension.md)                            |Generates fractals                    |New-Media,Show-Media                          |
+|[Mandelbrot](docs/Mandelbrot-Extension.md)                            |Generates fractals                    |Show-Media,New-Media                          |
 |[MedianPixel](docs/MedianPixel-Extension.md)                          |Picks median pixels                   |Show-Media,Edit-Media                         |
 |[Mirror](docs/Mirror-Extension.md)                                    |Mirror Extension                      |Show-Media,Edit-Media                         |
 |[MixAudio](docs/MixAudio-Extension.md)                                |Mix Audio                             |Join-Media                                    |
@@ -238,23 +238,24 @@ There are currently 120 extensions:
 |[Pulsator](docs/Pulsator-Extension.md)                                |Pulsator Effect                       |Show-Media,Edit-Media                         |
 |[RandomizeFrame](docs/RandomizeFrame-Extension.md)                    |RandomizeFrame extensions             |Show-Media,Edit-Media                         |
 |[Rate](docs/Rate-Extension.md)                                        |Adjusts the rate of media.            |Show-Media,Edit-Media                         |
-|[Resize](docs/Resize-Extension.md)                                    |Simple video resize.                  |Edit-Media,Convert-Media,Show-Media           |
+|[Resize](docs/Resize-Extension.md)                                    |Simple video resize.                  |Convert-Media,Edit-Media,Show-Media           |
 |[ReverseAudio](docs/ReverseAudio-Extension.md)                        |Reverses audio                        |Edit-Media                                    |
 |[ReverseVideo](docs/ReverseVideo-Extension.md)                        |Reverses video                        |Edit-Media                                    |
-|[Rotate](docs/Rotate-Extension.md)                                    |Rotates a video                       |Edit-Media,Convert-Media,Show-Media           |
+|[Rotate](docs/Rotate-Extension.md)                                    |Rotates a video                       |Convert-Media,Edit-Media,Show-Media           |
 |[Scale](docs/Scale-Extension.md)                                      |Scales video.                         |Show-Media,Edit-Media                         |
 |[ScrollVideo](docs/ScrollVideo-Extension.md)                          |Scrolls video                         |Show-Media,Edit-Media                         |
+|[SelectiveColor](docs/SelectiveColor-Extension.md)                    |Selective Color Extension             |Show-Media,Edit-Media                         |
 |[Sepia](docs/Sepia-Extension.md)                                      |Applies a Sepia Filter                |Edit-Media                                    |
-|[ShowFrequency](docs/ShowFrequency-Extension.md)                      |Show Frequencies                      |Edit-Media,New-Media,Show-Media               |
-|[ShowScale](docs/ShowScale-Extension.md)                              |Show the tonal scale of the audio     |Edit-Media,New-Media,Show-Media               |
-|[ShowSpectrum](docs/ShowSpectrum-Extension.md)                        |Shows the audio spectrum              |Edit-Media,New-Media,Show-Media               |
-|[ShowVectorScope](docs/ShowVectorScope-Extension.md)                  |Shows a Vector Scope of the Audio     |Edit-Media,New-Media,Show-Media               |
-|[ShowVolume](docs/ShowVolume-Extension.md)                            |Shows the volume of an audio stream.  |Edit-Media,New-Media,Show-Media               |
-|[ShowWaveform](docs/ShowWaveform-Extension.md)                        |Shows audio waveform.                 |Edit-Media,New-Media,Show-Media               |
+|[ShowFrequency](docs/ShowFrequency-Extension.md)                      |Show Frequencies                      |Edit-Media,Show-Media,New-Media               |
+|[ShowScale](docs/ShowScale-Extension.md)                              |Show the tonal scale of the audio     |Edit-Media,Show-Media,New-Media               |
+|[ShowSpectrum](docs/ShowSpectrum-Extension.md)                        |Shows the audio spectrum              |Edit-Media,Show-Media,New-Media               |
+|[ShowVectorScope](docs/ShowVectorScope-Extension.md)                  |Shows a Vector Scope of the Audio     |Edit-Media,Show-Media,New-Media               |
+|[ShowVolume](docs/ShowVolume-Extension.md)                            |Shows the volume of an audio stream.  |Edit-Media,Show-Media,New-Media               |
+|[ShowWaveform](docs/ShowWaveform-Extension.md)                        |Shows audio waveform.                 |Edit-Media,Show-Media,New-Media               |
 |[ShuffleFrames](docs/ShuffleFrames-Extension.md)                      |Shuffles frames in video              |Edit-Media                                    |
 |[ShufflePixels](docs/ShufflePixels-Extension.md)                      |Shuffles frames in video              |Edit-Media                                    |
 |[ShufflePlanes](docs/ShufflePlanes-Extension.md)                      |Shuffles planes in video              |Edit-Media                                    |
-|[Sierpinski](docs/Sierpinski-Extension.md)                            |Generates a Sierpinski fractal        |New-Media,Show-Media                          |
+|[Sierpinski](docs/Sierpinski-Extension.md)                            |Generates a Sierpinski fractal        |Show-Media,New-Media                          |
 |[SilenceDetect](docs/SilenceDetect-Extension.md)                      |Detects silence in an audio stream    |Get-Media                                     |
 |[SilenceRemove](docs/SilenceRemove-Extension.md)                      |Detects silence in an audio stream    |Edit-Media                                    |
 |[Sine](docs/Sine-Extension.md)                                        |Generates a sine wave                 |New-Media                                     |
@@ -266,7 +267,7 @@ There are currently 120 extensions:
 |[SuperFrequencyCut](docs/SuperFrequencyCut-Extension.md)              |Cut super frequencies.                |Show-Media,Edit-Media                         |
 |[SwapRect](docs/SwapRect-Extension.md)                                |swaprect                              |Edit-Media                                    |
 |[Tempo](docs/Tempo-Extension.md)                                      |Adjust audio tempo.                   |Show-Media,Edit-Media                         |
-|[TestSource](docs/TestSource-Extension.md)                            |Generates test sources                |New-Media,Show-Media                          |
+|[TestSource](docs/TestSource-Extension.md)                            |Generates test sources                |Show-Media,New-Media                          |
 |[Tile](docs/Tile-Extension.md)                                        |Tile Extension                        |Edit-Media                                    |
 |[TimeMix](docs/TimeMix-Extension.md)                                  |Mix successive video frames.          |Show-Media,Edit-Media                         |
 |[Tremolo](docs/Tremolo-Extension.md)                                  |Tremolo effect                        |Show-Media,Edit-Media                         |
