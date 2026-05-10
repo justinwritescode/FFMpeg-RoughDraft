@@ -17,6 +17,7 @@
 [Management.Automation.Cmdlet("Show","Media")]
 param(
 # If set, will use the selective color filter
+[Parameter(Mandatory)]
 [Alias('SelectiveColour')]
 [switch]
 $SelectiveColor,
