@@ -29,7 +29,7 @@ If set, will use the selective color filter
 
 |Type      |Required|Position|PipelineInput|Aliases        |
 |----------|--------|--------|-------------|---------------|
-|`[Switch]`|false   |named   |false        |SelectiveColour|
+|`[Switch]`|true    |named   |false        |SelectiveColour|
 
 #### **SelectiveColorCorrectionMethod**
 The Select color correction method.
@@ -110,5 +110,5 @@ Specify a Photoshop selective color file (.asv) to import the settings from.
 
 ### Syntax
 ```PowerShell
-Extension/SelectiveColor.RoughDraft.Extension.ps1 [-SelectiveColor] [[-SelectiveColorCorrectionMethod] <String>] [[-SelectiveColorRed] <String>] [[-SelectiveColorBlue] <String>] [[-SelectiveColorYellow] <String>] [[-SelectiveColorCyan] <String>] [[-SelectiveColorMagenta] <String>] [[-SelectiveColorWhite] <String>] [[-SelectiveColorBlack] <String>] [[-SelectiveColorNeutral] <String>] [[-SelectiveColorPSFile] <String>] [<CommonParameters>]
+Extension/SelectiveColor.RoughDraft.Extension.ps1 -SelectiveColor [[-SelectiveColorCorrectionMethod] <String>] [[-SelectiveColorRed] <String>] [[-SelectiveColorBlue] <String>] [[-SelectiveColorYellow] <String>] [[-SelectiveColorCyan] <String>] [[-SelectiveColorMagenta] <String>] [[-SelectiveColorWhite] <String>] [[-SelectiveColorBlack] <String>] [[-SelectiveColorNeutral] <String>] [[-SelectiveColorPSFile] <String>] [<CommonParameters>]
 ```
