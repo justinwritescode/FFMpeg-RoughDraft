@@ -25,7 +25,15 @@ The new rate of the media.
 
 |Type      |Required|Position|PipelineInput|
 |----------|--------|--------|-------------|
-|`[Double]`|true    |1       |false        |
+|`[Double]`|true    |named   |false        |
+
+#### **TargetTime**
+The target time for the media.  
+This will adjust the rate to match this target time.
+
+|Type        |Required|Position|PipelineInput|
+|------------|--------|--------|-------------|
+|`[PSObject]`|true    |named   |false        |
 
 ---
 
@@ -40,5 +48,8 @@ This uses a variety of filters:
 
 ### Syntax
 ```PowerShell
-Extension/Rate.rd.ext.ps1 [-Rate] <Double> [<CommonParameters>]
+Extension/Rate.rd.ext.ps1 -Rate <Double> [<CommonParameters>]
+```
+```PowerShell
+Extension/Rate.rd.ext.ps1 -TargetTime <PSObject> [<CommonParameters>]
 ```
