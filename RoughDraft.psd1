@@ -1,6 +1,6 @@
 @{
     CompanyName='Start-Automating'
-    ModuleVersion='0.4.2'
+    ModuleVersion='0.4.3'
     ModuleToProcess='RoughDraft.psm1'
     GUID='c192ebbf-57a3-493e-bc82-da7553038794'
     Description='A Fun PowerShell Module for Multimedia'
@@ -15,16 +15,11 @@
             LicenseURI = 'https://github.com/StartAutomating/RoughDraft/blob/main/LICENSE'
             IconURI    = 'https://github.com/StartAutomating/RoughDraft/blob/main/Assets/RoughDraft.png'
             ReleaseNotes = @'
-## 0.4.2
+## 0.4.3
 
-* Improvements to Media Downloader (#318)
-  * Now outputting the file
-  * Renaming -YouTubeUrl to -MediaUrl (keeping alias)
-* New Extensions:
-  * XBR (#319)
-  * ColorCurves (#320)
-  * Histogram Equalizer (#321)
-  * SelectiveColor (#324)
+* Fixing Rate Extension (#327)
+* Adding -TargetTime to Rate extension (#328)
+* Adding RGBAShift Extension (#329)
 
 ---
 
