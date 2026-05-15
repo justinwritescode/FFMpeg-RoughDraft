@@ -1,6 +1,14 @@
 > Like It? [Star It](https://github.com/StartAutomating/RoughDraft)
 > Love It? [Support It](https://github.com/sponsors/StartAutomating)
 
+## 0.4.3
+
+* Fixing Rate Extension (#327)
+* Adding -TargetTime to Rate extension (#328)
+* Adding RGBAShift Extension (#329)
+
+---
+
 ## 0.4.2
 
 * Improvements to Media Downloader (#318)
